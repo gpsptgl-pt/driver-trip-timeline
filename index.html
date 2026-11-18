@@ -401,7 +401,7 @@
 <body>
 
 <!-- Login gate -->
-<div class="login-overlay" id="loginOverlay">
+<div class="login-overlay" id="loginOverlay" style="display:none !important;">
   <div class="login-card">
     <div class="avatar">🛺</div>
     <h2>เข้าสู่ระบบ</h2>
@@ -438,13 +438,13 @@
       </div>
     </div>
     <div class="header-actions">
-      <div class="user-chip" id="userChip">
+      <div class="user-chip" id="userChip" style="display:none;">
         <span id="userChipName"></span><span class="role-badge" id="userChipRole"></span>
       </div>
       <div class="clock-box" id="clockBox">--</div>
       <button class="btn" id="themeToggle" type="button">🌙 มืด</button>
       <button class="btn btn-primary" id="refreshBtn" type="button">กำลังโหลด...</button>
-      <button class="btn" id="logoutBtn" type="button">ออกจากระบบ</button>
+      <button class="btn" id="logoutBtn" type="button" style="display:none;">ออกจากระบบ</button>
     </div>
   </div>
 </header>
@@ -763,7 +763,7 @@
       console.error("[login] failed to load the User tab:", err);
     });
   }
-  var usersLoadPromise = loadUsersOnce();
+  var usersLoadPromise = Promise.resolve(); // login removed: do not load the User tab
 
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -2552,6 +2552,11 @@
   document.getElementById("rdStatus").addEventListener("change", function () { rdState.status = this.value; renderReady(); });
   document.getElementById("rdNow").addEventListener("click", function () { rdState.startStr = ""; renderReady(); });
 
+
+  /* Login removed: open the app straight away (no user filtering, no admin tab). */
+  loginOverlay.style.display = "none";
+  appShell.style.display = "";
+  loadAndBuild();
 })();
 </script>
 </body>

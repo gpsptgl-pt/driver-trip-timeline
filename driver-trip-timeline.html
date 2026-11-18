@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ไทม์ไลน์การเดินทางของผู้ขับขี่</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --radius: 1rem;
+    --background: #EAF7EE;
+    --card: #FFFFFF;
+    --card-foreground: #1F3D2B;
+    --foreground: #1F3D2B;
+    --popover: #FFFFFF;
+    --popover-foreground: #1F3D2B;
+    --primary: #4CAF82;
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #3F9970;
+    --secondary: #DFF3E6;
+    --secondary-foreground: #2F6B4B;
+    --muted: #E3F3E9;
+    --muted-foreground: #6B8F7A;
+    --accent: #DFF3E6;
+    --accent-foreground: #1F3D2B;
+    --accent-blue: #3F8CD1;
+    --destructive: #DC2626;
+    --destructive-foreground: #ffffff;
+    --border: #CDE9D7;
+    --input: #CDE9D7;
+    --ring: #4CAF82;
+    --shadow: 0 6px 20px rgba(30, 90, 60, 0.08);
+  }
+  .dark {
+    --background: #10201A;
+    --card: #17281F;
+    --card-foreground: #DCEFE3;
+    --foreground: #DCEFE3;
+    --popover: #17281F;
+    --popover-foreground: #DCEFE3;
+    --primary: #4CAF82;
+    --primary-foreground: #0E1A14;
+    --primary-hover: #5FC397;
+    --secondary: #223A2C;
+    --secondary-foreground: #DCEFE3;
+    --muted: #1F3327;
+    --muted-foreground: #9DBBA9;
+    --accent: #223A2C;
+    --accent-foreground: #DCEFE3;
+    --accent-blue: #6FB3EE;
+    --destructive: #F87171;
+    --destructive-foreground: #10201A;
+    --border: #2C4536;
+    --input: #2C4536;
+    --ring: #4CAF82;
+    --shadow: 0 6px 20px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Prompt', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ===== Header ===== */
+  /* Header + filters stay pinned while scrolling (desktop / tablet). */
+  #stickyTop { position: sticky; top: 0; z-index: 50; background: var(--background); padding-bottom: 0.6rem; box-shadow: 0 6px 10px -8px rgba(0,0,0,.25); }
+  @media (max-width: 760px) { #stickyTop { position: static; box-shadow: none; } }
+  header.app-header { padding: 1.25rem 0 0.5rem; }
+  header.app-header .row {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; }
+  .brand .avatar {
+    width: 44px; height: 44px; border-radius: 999px; background: var(--accent-blue);
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+    box-shadow: var(--shadow);
+  }
+  .brand h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .brand p { font-size: 0.75rem; color: var(--muted-foreground); margin: 0.15rem 0 0; }
+  .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .clock-box {
+    border: 1px solid var(--border); background: var(--card); border-radius: 999px;
+    padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 500; color: var(--foreground);
+    white-space: nowrap;
+  }
+
+  main { padding: 1.25rem 0 2.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+    border-radius: 999px; border: 1px solid var(--input); background: var(--card); color: var(--foreground);
+    font-family: inherit; font-size: 0.8125rem; font-weight: 500; padding: 0.55rem 1.1rem;
+    cursor: pointer; transition: background-color .15s ease, opacity .15s ease; white-space: nowrap;
+  }
+  .btn:hover { background: var(--accent); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); font-weight: 600; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-link { border: none; background: transparent; text-decoration: underline; color: var(--muted-foreground); padding: 0; font-size: 0.8125rem; font-family: inherit; cursor: pointer; }
+  .btn-link:hover { color: var(--foreground); }
+
+  .seg-toggle { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+  .seg-toggle button {
+    border: none; background: transparent; padding: 0.5rem 1rem; font-family: inherit;
+    font-size: 0.8125rem; color: var(--muted-foreground); cursor: pointer; border-radius: 999px; font-weight: 500;
+  }
+  .seg-toggle button.active { background: var(--primary); color: var(--primary-foreground); font-weight: 600; }
+  .seg-toggle button:hover:not(.active) { color: var(--foreground); }
+
+  .zoom-group { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 3px; }
+  .zoom-group button { border: none; background: transparent; width: 1.75rem; height: 1.75rem; border-radius: 999px; color: var(--muted-foreground); cursor: pointer; font-size: 0.9rem; }
+  .zoom-group button:hover { background: var(--accent); color: var(--foreground); }
+  .zoom-group .zoom-label { padding: 0 0.4rem; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.75rem; }
+  .zoom-group .zoom-reset { width: auto; padding: 0 0.7rem; font-size: 0.75rem; }
+
+  /* ===== Cards ===== */
+  .card { border: 1px solid var(--border); background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card-pad { padding: 1.25rem; }
+  .card-head {
+    border-bottom: 1px solid var(--border); padding: 0.75rem 1.25rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+
+  /* ===== Filters ===== */
+  .filters-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 1rem; }
+  @media (min-width: 860px) { .filters-grid { grid-template-columns: repeat(4, 1fr); } }
+  label.field-label { font-size: 0.8125rem; font-weight: 500; color: var(--foreground); display: block; margin-bottom: 0.4rem; }
+
+  .filters-foot { margin-top: 1.1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; }
+  .pill-stats { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pill-stat {
+    display: inline-flex; align-items: center; gap: 0.3rem; background: var(--muted); color: var(--foreground);
+    border-radius: 999px; padding: 0.35rem 0.9rem; font-size: 0.8125rem;
+  }
+  .pill-stat b { font-weight: 700; }
+
+  /* ===== Multiselect + date range ===== */
+  .msel, .drange { position: relative; }
+  .msel-btn, .drange-btn {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; width: 100%;
+    border: 1px solid var(--input); background: var(--card); border-radius: 0.75rem;
+    padding: 0.6rem 0.9rem; font-size: 0.8125rem; font-family: inherit; cursor: pointer; text-align: left; color: var(--foreground);
+  }
+  .msel-btn:hover, .drange-btn:hover { background: var(--accent); }
+  .msel-btn .placeholder, .drange-btn .placeholder { color: var(--muted-foreground); }
+  .msel-btn .arrow, .drange-btn .arrow { color: var(--muted-foreground); font-size: 0.7rem; flex-shrink: 0; }
+  .msel-panel, .drange-panel {
+    position: absolute; z-index: 30; margin-top: 0.4rem; width: 100%; min-width: 240px;
+    border: 1px solid var(--border); background: var(--popover); color: var(--popover-foreground);
+    border-radius: 0.9rem; box-shadow: 0 12px 32px rgba(60,40,10,.18); display: none; overflow: hidden;
+  }
+  .msel-panel.open, .drange-panel.open { display: block; }
+  .msel-search { border-bottom: 1px solid var(--border); padding: 0.5rem; }
+  .msel-search input, .drange-panel input[type="date"] {
+    width: 100%; border: 1px solid var(--input); background: var(--card); color: var(--foreground);
+    border-radius: 0.6rem; padding: 0.45rem 0.6rem; font-size: 0.8125rem; font-family: inherit;
+  }
+  .msel-list { max-height: 15rem; overflow: auto; padding: 0.3rem 0; }
+  .msel-list label { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.9rem; font-size: 0.8125rem; cursor: pointer; }
+  .msel-list label:hover { background: var(--accent); }
+  .msel-empty { padding: 0.6rem 0.9rem; font-size: 0.8125rem; color: var(--muted-foreground); }
+  .msel-foot, .drange-foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding: 0.55rem 0.9rem; font-size: 0.75rem; }
+  .msel-foot .actions, .drange-foot .actions { display: flex; gap: 0.75rem; }
+  .drange-body { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .drange-field label { font-size: 0.7rem; color: var(--muted-foreground); display: block; margin-bottom: 0.2rem; }
+
+  /* ===== Timeline ===== */
+  .timeline-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .tl-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; font-size: 0.75rem; }
+  .tl-legend .chip { display: inline-flex; align-items: center; gap: 0.375rem; }
+  .tl-legend .swatch { display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 3px; }
+  .tl-legend .hint { margin-left: auto; color: var(--muted-foreground); }
+  .tl-group-label { font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .tl-scroll { overflow-x: auto; }
+  .tl-row { display: grid; grid-template-columns: 10rem 1fr; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .tl-driver-name { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.75rem; overflow: hidden; }
+  .tl-driver-name span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tl-track { position: relative; height: 2rem; border-radius: 0.6rem; background: var(--muted); border: 1px solid var(--border); overflow: hidden; }
+  .tl-seg { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: #fff; overflow: hidden; padding: 0 4px; white-space: nowrap; border-radius: 4px; }
+  .tl-seg-warn { box-shadow: inset 0 0 0 2px #B91C1C; }
+  .tl-seg-warn::after { content: "⚠"; position: absolute; top: 1px; right: 2px; font-size: 8px; line-height: 1; color: #fff; text-shadow: 0 0 2px #000, 0 0 2px #000; }
+  .tl-axis-row { display: grid; grid-template-columns: 10rem 1fr; gap: 0.75rem; }
+  .tl-axis { position: relative; height: 1rem; font-size: 10px; color: var(--muted-foreground); }
+  .tl-axis span { position: absolute; top: 0; transform: translateX(-50%); }
+  .tl-empty { padding: 2.5rem 1rem; text-align: center; font-size: 0.85rem; color: var(--muted-foreground); }
+  .tl-error { padding: 1.25rem; font-size: 0.8125rem; color: var(--destructive); white-space: pre-line; }
+  .tl-gridline { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--border); }
+
+  /* ===== Tool tabs ===== */
+  .tool-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tool-tabs button {
+    border: 1px solid var(--border); background: var(--card); color: var(--muted-foreground);
+    border-radius: 999px; padding: 0.55rem 1.15rem; font-family: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+  }
+  .tool-tabs button.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+  .tool-tabs button:hover:not(.active) { color: var(--foreground); background: var(--accent); }
+
+  /* ===== Violations (chart dashboard) ===== */
+  .viol-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.75rem; }
+  .viol-block-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+  .viol-block-head h3 { font-size: 0.95rem; font-weight: 700; margin: 0; }
+  .viol-desc { font-size: 0.78rem; color: var(--muted-foreground); margin-bottom: 0.75rem; }
+
+  .viol-stats { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .viol-stat { background: var(--muted); border-radius: 0.9rem; padding: 0.85rem 1.2rem; min-width: 170px; flex: 1 1 170px; }
+  .viol-stat .num { font-size: 1.5rem; font-weight: 700; color: var(--destructive); line-height: 1.1; }
+  .viol-stat .lbl { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 0.25rem; }
+
+  .viol-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; }
+  @media (min-width: 860px) { .viol-grid { grid-template-columns: 1fr 1fr; } }
+
+  .chart-legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.6rem; flex-wrap: wrap; }
+  .chart-legend .chip { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .chart-legend .swatch { width: 0.7rem; height: 0.7rem; border-radius: 3px; display: inline-block; }
+
+  /* Horizontal bar chart (top drivers / affiliations) */
+  .hbar-row { display: grid; grid-template-columns: 8.5rem 1fr 2.6rem; align-items: center; gap: 0.6rem; margin-bottom: 0.55rem; font-size: 0.78rem; }
+  .hbar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbar-track { position: relative; background: var(--muted); border-radius: 0.4rem; height: 1.3rem; overflow: hidden; }
+  .hbar-fill { height: 100%; border-radius: 0.4rem; transition: width .25s ease; }
+  .hbar-value { text-align: right; font-weight: 700; font-size: 0.75rem; }
+  .hbar-empty { font-size: 0.8rem; color: var(--muted-foreground); padding: 1rem 0; text-align: center; }
+
+  /* Driver x day/week heatmap */
+  .heatmap-scroll { overflow: auto; max-height: 26rem; border: 1px solid var(--border); border-radius: 0.75rem; }
+  .heatmap-table { border-collapse: collapse; font-size: 0.68rem; }
+  .heatmap-table th, .heatmap-table td { border: 1px solid var(--border); padding: 3px 6px; text-align: center; white-space: nowrap; }
+  .heatmap-corner { position: sticky; left: 0; top: 0; z-index: 3; background: var(--muted); }
+  .heatmap-table thead th { position: sticky; top: 0; background: var(--muted); z-index: 2; font-weight: 600; color: var(--muted-foreground); font-size: 0.62rem; }
+  .heatmap-rowlabel { position: sticky; left: 0; background: var(--card); z-index: 1; text-align: left; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .heatmap-avghead { position: sticky; left: 9rem; top: 0; z-index: 3; background: var(--muted); white-space: nowrap; }
+  .heatmap-avg { position: sticky; left: 9rem; z-index: 1; background: var(--card); font-weight: 700; min-width: 56px; }
+  .heatmap-avg.over { color: var(--destructive); }
+  .heatmap-cell[data-r] { cursor: pointer; }
+  .heatmap-cell[data-r]:hover { outline: 2px solid var(--foreground); outline-offset: -2px; }
+  .heatmap-cell { min-width: 28px; height: 24px; font-weight: 700; color: #7A1313; }
+  .dark .heatmap-cell { color: #FFD9D9; }
+
+
+  /* Daily trend chart */
+  .cal-wrap { border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.9rem; background: var(--card); }
+  .cal-head { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 0.7rem; }
+  .cal-title { font-weight: 700; font-size: 0.95rem; min-width: 150px; text-align: center; }
+  .cal-nav { border: 1px solid var(--border); background: var(--card); color: var(--foreground); border-radius: 0.5rem; width: 2rem; height: 2rem; cursor: pointer; font-size: 0.9rem; }
+  .cal-nav:disabled { opacity: .35; cursor: default; }
+  .cal-month-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; margin-bottom: 0.8rem; }
+  .cal-month-sum > div { background: var(--muted); border-radius: 0.6rem; padding: 0.4rem 0.7rem; display: flex; flex-direction: column; }
+  .cal-month-sum span { font-size: 0.68rem; color: var(--muted-foreground); }
+  .cal-month-sum b { font-size: 0.92rem; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .cal-dow { text-align: center; font-size: 0.72rem; font-weight: 600; color: var(--muted-foreground); padding-bottom: 2px; }
+  .cal-cell { min-height: 76px; border: 1px solid var(--border); border-radius: 0.5rem; padding: 4px 5px; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+  .cal-cell.empty { border: none; }
+  .cal-day { font-size: 0.7rem; color: var(--muted-foreground); display: flex; justify-content: space-between; align-items: center; }
+  .cal-over { background: #DC2626; color: #fff; border-radius: 999px; font-size: 0.62rem; font-weight: 700; padding: 0 5px; line-height: 1.4; }
+  .cal-hours { font-size: 0.95rem; font-weight: 700; color: var(--foreground); line-height: 1.1; }
+  .cal-sub { font-size: 0.62rem; color: var(--muted-foreground); }
+  .cal-time { font-size: 0.62rem; line-height: 1.3; color: var(--foreground); margin-top: 2px; white-space: nowrap; }
+  .cal-time b { font-weight: 600; color: var(--muted-foreground); }
+  .cal-drv-time { font-size: 0.74rem; color: var(--muted-foreground); margin-top: 2px; }
+  .cal-modal { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .cal-modal.open { display: flex; }
+  .cal-modal-box.wide { width: min(980px, 100%); }
+  .cal-modal-box { background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 1rem; box-shadow: var(--shadow); width: min(680px, 100%); max-height: 86vh; display: flex; flex-direction: column; }
+  .cal-modal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem 0.6rem; border-bottom: 1px solid var(--border); }
+  .cal-modal-title { font-weight: 700; font-size: 1.05rem; }
+  .cal-modal-sum { font-size: 0.78rem; color: var(--muted-foreground); margin-top: 2px; }
+  .cal-modal-close { border: 1px solid var(--border); background: var(--card); color: var(--foreground); border-radius: 0.5rem; width: 2rem; height: 2rem; cursor: pointer; flex: none; }
+  .cal-modal-body { overflow-y: auto; padding: 0.8rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .cal-drv { flex: none; border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
+  .cal-drv.over { border-color: var(--destructive); }
+  .cal-drv-head { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem; background: var(--muted); font-size: 0.85rem; font-weight: 700; }
+  .cal-drv.over .cal-drv-head { color: var(--destructive); }
+  .cal-drv-head small { font-weight: 400; color: var(--muted-foreground); }
+  .cal-trips { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .cal-trips th, .cal-trips td { text-align: left; padding: 0.3rem 0.8rem; border-top: 1px solid var(--border); }
+  .cal-trips th { color: var(--muted-foreground); font-weight: 600; }
+  .cal-trips tr.long td { color: var(--destructive); font-weight: 700; }
+  .cal-none { font-size: 0.78rem; color: var(--muted-foreground); padding: 0.5rem 0.8rem; }
+  .trend-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem 1rem 0.6rem; background: var(--card); }
+  .trend-chart { display: flex; align-items: flex-end; gap: 6px; height: 178px; min-width: 100%; }
+  .trend-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; min-width: 20px; height: 100%; }
+  .trend-bars { display: flex; align-items: flex-end; gap: 2px; height: 140px; }
+  .trend-bar { width: 8px; border-radius: 2px 2px 0 0; min-height: 2px; }
+  .trend-date { font-size: 9px; color: var(--muted-foreground); white-space: nowrap; height: 12px; }
+  .trend-empty { font-size: 0.8rem; color: var(--muted-foreground); padding: 2rem 0; text-align: center; }
+
+  ::selection { background: var(--ring); color: #fff; }
+
+  /* ===== Login gate ===== */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 999; background: var(--background);
+    display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+  }
+  .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem; box-shadow: var(--shadow); padding: 2rem; width: 100%; max-width: 360px; }
+  .login-card .avatar { width: 56px; height: 56px; border-radius: 999px; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 1rem; }
+  .login-card h2 { text-align: center; font-size: 1.15rem; margin: 0 0 0.25rem; }
+  .login-card p.sub { text-align: center; font-size: 0.78rem; color: var(--muted-foreground); margin: 0 0 1.5rem; }
+  .login-field { margin-bottom: 1rem; }
+  .login-field label { font-size: 0.78rem; font-weight: 500; display: block; margin-bottom: 0.35rem; }
+  .login-error { color: var(--destructive); font-size: 0.78rem; margin-bottom: 0.75rem; min-height: 1rem; }
+  .login-btn { width: 100%; }
+  .login-note { margin-top: 1.25rem; font-size: 0.68rem; color: var(--muted-foreground); text-align: center; line-height: 1.5; }
+
+  .user-chip { display: flex; align-items: center; gap: 0.4rem; background: var(--muted); border-radius: 999px; padding: 0.45rem 0.85rem; font-size: 0.75rem; font-weight: 500; }
+  .user-chip .role-badge { background: var(--primary); color: var(--primary-foreground); border-radius: 999px; padding: 0.05rem 0.55rem; font-size: 0.65rem; font-weight: 700; }
+
+  /* ===== Admin: user rights management ===== */
+  .admin-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .admin-note { font-size: 0.78rem; color: var(--muted-foreground); background: var(--muted); border-radius: 0.75rem; padding: 0.75rem 1rem; }
+  .admin-table-head { display: none; }
+  @media (min-width: 900px) {
+    .admin-table-head { display: grid; grid-template-columns: 10rem 8rem 1fr 6rem; gap: 0.75rem; font-size: 0.72rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: .02em; padding: 0 0.25rem; }
+  }
+  .admin-row { display: grid; grid-template-columns: 1fr; gap: 0.6rem; padding: 0.85rem; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--card); align-items: center; }
+  @media (min-width: 900px) { .admin-row { grid-template-columns: 10rem 8rem 1fr 6rem; padding: 0.6rem 0.75rem; } }
+  .admin-user { font-weight: 600; font-size: 0.85rem; }
+  .admin-status { font-size: 0.7rem; color: var(--muted-foreground); }
+  .admin-save-row { display: flex; align-items: center; gap: 0.75rem; }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 640px) {
+    .container { padding: 0 0.85rem; }
+    .brand h1 { font-size: 1.05rem; }
+    .brand p { font-size: 0.68rem; }
+    .brand .avatar { width: 38px; height: 38px; font-size: 1.1rem; }
+    .clock-box { font-size: 0.68rem; padding: 0.4rem 0.65rem; }
+    .login-card { padding: 1.4rem; max-width: 100%; }
+    .user-chip { font-size: 0.68rem; padding: 0.35rem 0.65rem; }
+    .user-chip .role-badge { font-size: 0.6rem; }
+    header.app-header { padding: 1rem 0 0.4rem; }
+    main { padding: 1rem 0 2rem; gap: 1rem; }
+    .card-pad { padding: 0.9rem; }
+    .card-head { padding: 0.65rem 0.9rem; }
+    .timeline-body, .viol-body { padding: 0.9rem; }
+    .tl-row, .tl-axis-row { grid-template-columns: 5.2rem 1fr; gap: 0.5rem; }
+    .tl-driver-name { font-size: 0.68rem; }
+    .msel-panel, .drange-panel { min-width: 0; }
+    .hbar-row { grid-template-columns: 6rem 1fr 2.2rem; font-size: 0.72rem; }
+    .trend-chart { height: 150px; }
+    .cal-cell { min-height: 58px; padding: 3px; }
+    .cal-hours { font-size: 0.78rem; }
+    .cal-sub { display: none; }
+    .trend-bars { height: 115px; }
+    .viol-stat { min-width: 130px; padding: 0.7rem 0.9rem; }
+    .viol-stat .num { font-size: 1.2rem; }
+    .seg-toggle { gap: 0.4rem; }
+    .seg-toggle button { padding: 0.45rem 0.75rem; font-size: 0.75rem; }
+    .tool-tabs button { padding: 0.5rem 0.85rem; font-size: 0.75rem; }
+    .zoom-group .zoom-reset { padding: 0 0.55rem; }
+    .pill-stats { gap: 0.4rem; }
+    .pill-stat { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
+  }
+
+  /* ===== Tool: พขร.พร้อมรับงาน ===== */
+  .rd-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .rd-controls { display: grid; grid-template-columns: 1fr; gap: 0.85rem; align-items: end; }
+  @media (min-width: 860px) { .rd-controls { grid-template-columns: repeat(4, 1fr) auto; } }
+  .rd-controls > div > label { display: block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.3rem; }
+  .rd-controls > div > input, .rd-controls > div > select {
+    width: 100%; font-family: inherit; font-size: 0.8125rem; color: var(--foreground); background: var(--card);
+    border: 1px solid var(--input); border-radius: 0.75rem; padding: 0.5rem 0.75rem; height: 2.4rem;
+  }
+  #rdPlateMsel .msel-btn { height: 2.4rem; padding: 0 0.75rem; }
+  #rdPlateMsel .msel-btn .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #rdPlateMsel .msel-panel { min-width: 200px; width: max-content; max-width: 280px; }
+  #rdPlateMsel .msel-list { max-height: 11rem; }
+  .rd-rules { font-size: 0.78rem; color: var(--muted-foreground); background: var(--muted); border-radius: 0.9rem; padding: 0.75rem 1rem; line-height: 1.7; }
+  .rd-rules b { color: var(--foreground); }
+  .rd-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 0.9rem; }
+  table.rd-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 780px; }
+  .rd-table th { text-align: left; font-weight: 600; font-size: 0.72rem; color: var(--muted-foreground); background: var(--muted); padding: 0.55rem 0.7rem; white-space: nowrap; position: sticky; top: 0; }
+  .rd-table td { padding: 0.55rem 0.7rem; border-top: 1px solid var(--border); vertical-align: top; }
+  .rd-table tbody tr { cursor: pointer; }
+  .rd-table tbody tr:hover { background: var(--accent); }
+  .rd-badge { display: inline-block; border-radius: 999px; padding: 0.12rem 0.65rem; font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+  .rd-badge.full { background: #4CAF82; color: #fff; }
+  .rd-badge.part { background: #F5B942; color: #3b2a00; }
+  .rd-badge.no { background: var(--destructive); color: var(--destructive-foreground); }
+  .rd-badge.drv { background: var(--accent-blue); color: #fff; }
+  .rd-sub { font-size: 0.7rem; color: var(--muted-foreground); }
+  .rd-warn { color: var(--destructive); font-weight: 600; }
+  .rd-ok { color: var(--primary); font-weight: 600; }
+  .rd-dtl { width: 100%; border-collapse: collapse; font-size: 0.74rem; min-width: 620px; }
+  .rd-dtl th { text-align: left; color: var(--muted-foreground); font-weight: 600; padding: 0.35rem 0.45rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .rd-dtl td { padding: 0.4rem 0.45rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .rd-dtl tr.bad td { background: rgba(220,38,38,.08); }
+  .rd-dtl tr.cyc td { border-top: 2px solid var(--primary); }
+</style>
+</head>
+<body>
+
+<!-- Login gate -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="avatar">🛺</div>
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="sub">ไทม์ไลน์การเดินทางของผู้ขับขี่</p>
+    <form id="loginForm">
+      <div class="login-field">
+        <label for="loginUsername">ชื่อผู้ใช้</label>
+        <input type="text" id="loginUsername" class="input" autocomplete="username" required />
+      </div>
+      <div class="login-field">
+        <label for="loginPassword">รหัสผ่าน</label>
+        <input type="password" id="loginPassword" class="input" autocomplete="current-password" required />
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <button type="submit" class="btn btn-primary login-btn">เข้าสู่ระบบ</button>
+    </form>
+    <div class="login-note">
+      ระบบนี้เป็นการกันเข้าถึงเบื้องต้นเท่านั้น ทำงานฝั่งเบราว์เซอร์ล้วน ไม่มีเซิร์ฟเวอร์ตรวจสอบสิทธิ์จริง
+      โปรดดูรายละเอียดผู้ใช้ตัวอย่าง/วิธีแก้ไขในคอมเมนต์ต้นไฟล์
+    </div>
+  </div>
+</div>
+
+<div id="appShell" style="display:none;">
+
+<div id="stickyTop">
+<header class="app-header">
+  <div class="container row">
+    <div class="brand">
+      <div class="avatar">🛺</div>
+      <div>
+        <h1>ไทม์ไลน์การเดินทางของผู้ขับขี่</h1>
+        <p>ข้อมูลสดจาก Google Sheet — กรองตามสังกัด ผู้ขับขี่ ทะเบียน และช่วงวันที่</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="user-chip" id="userChip">
+        <span id="userChipName"></span><span class="role-badge" id="userChipRole"></span>
+      </div>
+      <div class="clock-box" id="clockBox">--</div>
+      <button class="btn" id="themeToggle" type="button">🌙 มืด</button>
+      <button class="btn btn-primary" id="refreshBtn" type="button">กำลังโหลด...</button>
+      <button class="btn" id="logoutBtn" type="button">ออกจากระบบ</button>
+    </div>
+  </div>
+</header>
+
+<div class="container" id="stickyFilters">
+  <!-- Filters -->
+  <section class="card card-pad" id="filtersSection" style="display:none;">
+    <div class="filters-grid">
+      <div>
+        <label class="field-label">สังกัด (เลือกได้หลายสังกัด)</label>
+        <div id="affMsel"></div>
+      </div>
+      <div>
+        <label class="field-label">ผู้ขับขี่ (เลือกได้หลายคน)</label>
+        <div id="driverMsel"></div>
+      </div>
+      <div>
+        <label class="field-label">ทะเบียนรถ (เลือกได้หลายคัน)</label>
+        <div id="plateMsel"></div>
+      </div>
+      <div>
+        <label class="field-label">ช่วงวันที่</label>
+        <div id="dateRangeWrap"></div>
+      </div>
+    </div>
+    <div class="filters-foot">
+      <div class="pill-stats">
+        <span class="pill-stat">รายการ <b id="statRecords">0</b></span>
+        <span class="pill-stat">ผู้ขับขี่ <b id="statDrivers">0</b></span>
+        <span class="pill-stat">วัน <b id="statDays">0</b></span>
+      </div>
+      <button class="btn-link" id="resetFiltersBtn" type="button">ล้างตัวกรอง</button>
+    </div>
+  </section>
+</div>
+</div><!-- /stickyTop -->
+
+<main class="container">
+
+
+  <!-- Tool tabs -->
+  <div class="tool-tabs" id="toolTabs">
+    <button data-tool="violations" type="button">📊 Dashboards</button>
+    <button data-tool="timeline" class="active" type="button">🗺️ ไทม์ไลน์</button>
+    <button data-tool="ready" type="button">✅ พขร.พร้อมรับงาน</button>
+    <button data-tool="admin" type="button" id="adminToolTab" style="display:none;">🔐 จัดการสิทธิ์ผู้ใช้</button>
+  </div>
+
+  <!-- Timeline -->
+  <section class="card" id="timelineSection">
+    <div class="card-head">
+      <div class="seg-toggle" id="groupByGroup">
+        <button data-group="day" class="active" type="button">รายวัน</button>
+        <button data-group="week" type="button">รายสัปดาห์</button>
+      </div>
+      <div style="margin-left:auto;">
+        <div class="zoom-group">
+          <button id="zoomOut" type="button">−</button>
+          <span class="zoom-label" id="zoomLabel">1.0x</span>
+          <button id="zoomIn" type="button">+</button>
+          <button class="zoom-reset" id="zoomReset" type="button">รีเซ็ต</button>
+        </div>
+      </div>
+    </div>
+    <div id="timelineBody" class="timeline-body">
+      <div class="tl-empty">กำลังโหลดข้อมูล...</div>
+    </div>
+  </section>
+
+  <!-- Violations -->
+  <section class="card" id="violationsSection" style="display:none;">
+    <div class="card-head">
+      <div style="font-weight:700;">📊 Dashboards — การละเมิดเงื่อนไขการขับขี่</div>
+    </div>
+    <div class="viol-body">
+      <div class="viol-stats" id="violStats"></div>
+
+      <div>
+        <div class="viol-block-head"><h3>📅 สรุปชั่วโมงขับรถรายวัน (ปฏิทิน)</h3></div>
+        <div class="viol-desc">ชั่วโมงขับสะสมเฉลี่ยต่อคนของผู้ขับขี่ที่กรองไว้ในแต่ละวัน (ข้อมูลจากแท็บ "ขับสะสมทั้งวัน") — กดลูกศรเพื่อเปลี่ยนเดือน คลิกที่วันเพื่อดูชั่วโมงขับสะสมรายคน</div>
+        <div class="chart-legend">
+          <span class="chip"><span class="swatch" style="background:rgba(76,175,130,.55)"></span> สีเข้มขึ้น = ชั่วโมงขับเฉลี่ยมากขึ้น</span>
+          <span class="chip"><span class="swatch" style="background:#DC2626"></span> จำนวนคนที่ขับเกิน 10 ชม./วัน</span>
+        </div>
+        <div class="cal-wrap" id="calChart"></div>
+      </div>
+
+      <div>
+        <div class="viol-block-head"><h3>🕒 ชั่วโมงขับรวมรายวัน — แยกตามผู้ขับขี่ x วัน</h3></div>
+        <div class="viol-desc">แต่ละช่องคือชั่วโมงขับสะสมรวมของผู้ขับขี่คนนั้นในวันนั้น (ข้อมูลจากแท็บ "ขับสะสมทั้งวัน") พร้อมคอลัมน์เฉลี่ย/วัน (เฉลี่ยเฉพาะวันที่คนนั้นมีข้อมูล) — วันที่ขับเกิน 10 ชม. ไฮไลท์สีแดง — คลิกที่ช่องเพื่อดูรายละเอียด</div>
+        <div id="heatmapC"></div>
+      </div>
+
+      <div>
+        <div class="viol-block-head"><h3>🚩 ขับเกิน 4 ชม./ช่วงเวลา — แยกตามผู้ขับขี่ x วัน</h3></div>
+        <div class="viol-desc">แต่ละช่องคือจำนวนครั้งที่ผู้ขับขี่คนนั้นขับต่อเนื่องเกิน 4 ชั่วโมง ในวันนั้นๆ (แสดงเฉพาะผู้ขับขี่ที่มีการละเมิด เรียงรวมมากไปน้อย) — คลิกที่ช่องเพื่อดูรายละเอียด</div>
+        <div id="heatmapA"></div>
+      </div>
+
+      <div>
+        <div class="viol-block-head"><h3>🚩 ขับเกิน 10 ชม./วัน — แยกตามผู้ขับขี่ x วัน</h3></div>
+        <div class="viol-desc">แต่ละช่องคือจำนวนชั่วโมงรวมที่ผู้ขับขี่คนนั้นขับในวันนั้น (แสดงเฉพาะวันที่รวมเกิน 10 ชั่วโมง — 1 วันแสดงได้อย่างมาก 1 ค่า เพราะเป็นยอดรวมทั้งวัน ไม่ใช่จำนวนครั้ง) — คลิกที่ช่องเพื่อดูรายละเอียด</div>
+        <div id="heatmapB"></div>
+      </div>
+
+      <div id="affiliationChartWrap" style="display:none;">
+        <div class="viol-block-head"><h3>🏢 การละเมิดแยกตามสังกัด</h3></div>
+        <div class="viol-desc">ผลรวมจำนวนการละเมิดทั้งสองเงื่อนไข แยกตามสังกัด</div>
+        <div id="chartAffiliation"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Tool: พขร.พร้อมรับงาน -->
+  <section class="card" id="readySection" style="display:none;">
+    <div class="card-head">
+      <div style="font-weight:700;">✅ พขร.พร้อมรับงาน — ตรวจเงื่อนไขขับ/พักตลอดทริป และหาคนพร้อมทำงานวันถัดไป</div>
+    </div>
+    <div class="rd-body">
+      <div class="rd-rules">
+        <b>เงื่อนไข (นับต่อเนื่องตลอดทริป ไม่สนวันที่):</b>
+        ช่วงที่ 1 ขับไม่เกิน <b>4 ชม.</b> → พักอย่างน้อย <b>30 นาที</b> ·
+        ช่วงที่ 2 ขับไม่เกิน <b>4 ชม.</b> → พักอย่างน้อย <b>30 นาที</b> ·
+        ช่วงที่ 3 ขับไม่เกิน <b>2 ชม.</b> → ต้องพักต่อเนื่อง <b>10 ชม.</b> จึงเริ่มรอบใหม่ได้ (รวมขับไม่เกิน 10 ชม.).
+        ระบบใช้ตัวกรอง สังกัด / ผู้ขับขี่ / ทะเบียน ด้านบนเลือกคน ส่วน <b>ตัวกรองวันที่ไม่มีผล</b> เพราะต้องดูทริปต่อเนื่องหลายวัน
+      </div>
+      <div class="rd-controls">
+        <div><label for="rdStart">เวลาเริ่มงานวันถัดไป</label><input type="datetime-local" id="rdStart" /></div>
+        <div><label for="rdMin">ต้องการชั่วโมงขับที่เหลืออย่างน้อย (ชม.)</label><input type="number" id="rdMin" min="1" max="10" step="0.5" value="10" /></div>
+        <div><label>ทะเบียนรถ (ทะเบียนล่าสุดของ พขร.)</label><div id="rdPlateMsel"></div></div>
+        <div><label for="rdStatus">แสดง</label>
+          <select id="rdStatus">
+            <option value="all">ทั้งหมด</option>
+            <option value="ready">เฉพาะคนที่พร้อมรับงาน</option>
+            <option value="notready">เฉพาะคนที่ยังไม่พร้อม</option>
+            <option value="viol">เฉพาะคนที่เคยผิดเงื่อนไข</option>
+          </select></div>
+        <button class="btn" id="rdNow" type="button">ตั้งเป็นวันถัดไปจากข้อมูลล่าสุด</button>
+      </div>
+      <div class="pill-stats" id="rdStats"></div>
+      <div class="rd-wrap"><div id="rdTable"></div></div>
+      <div class="rd-sub">คลิกที่แถวเพื่อดูรายละเอียดทริปต่อทริปว่าขับ/พักผ่านเงื่อนไขหรือไม่</div>
+    </div>
+  </section>
+
+  <!-- Admin: user rights management -->
+  <section class="card" id="adminSection" style="display:none;">
+    <div class="card-head">
+      <div style="font-weight:700;">จัดการสิทธิ์การมองเห็นข้อมูลของผู้ใช้ (เฉพาะแอดมิน)</div>
+      <button class="btn" id="adminRefreshBtn" type="button" style="margin-left:auto;">รีเฟรชรายชื่อผู้ใช้</button>
+    </div>
+    <div class="admin-body">
+      <div class="admin-note">
+        แก้ไขแล้วกด "บันทึก" ต่อแถว — ระบบจะส่งคำขอเขียนกลับไปที่แท็บ "User" ในชีตให้อัตโนมัติผ่าน Apps Script ที่ตั้งค่าไว้
+        (แบบ fire-and-forget ยืนยันผลจากหน้านี้ไม่ได้ทันที) กด "รีเฟรชรายชื่อผู้ใช้" อีกครั้งเพื่อตรวจสอบว่าบันทึกสำเร็จจริง
+      </div>
+      <div class="admin-table-head">
+        <div>ผู้ใช้</div><div>สิทธิ์</div><div>สังกัดที่มองเห็นได้</div><div></div>
+      </div>
+      <div id="adminUserList"></div>
+    </div>
+  </section>
+
+</main>
+
+</div>
+<!-- /appShell -->
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     Fixed data source — no setup UI, always loads this sheet/tab
+     ========================================================= */
+  var SHEET_ID = "1ztlH8ryH9bfw5kZTyQkpYq7_orgWpsvVhLeR_E02-VA";
+  var GID = "1570161058";
+
+  // "ขับสะสมทั้งวัน" tab — one row per driver per day with the sheet's own
+  // pre-computed cumulative driving time for that day (col D). Dashboards'
+  // "เกิน 10 ชม./วัน" section and the Timeline's over-10h warning icon both
+  // read from this tab directly instead of summing individual trips.
+  var CUMULATIVE_GID = "1529177294";
+
+  /* =========================================================
+     Login + role-based visibility
+     -----------------------------------------------------------
+     IMPORTANT — read before relying on this for real security:
+     This whole file runs client-side in the browser, and the Google
+     Sheet it reads from is fetched via a public "anyone with the
+     link" endpoint with no server checking who's asking. So this
+     login screen is only a light front-door — it stops a casual
+     visitor from seeing the dashboard, and (for a "User"-rights
+     account) hides other affiliations' data from the normal UI. It
+     does NOT stop someone determined from reading the page's
+     source/network traffic and getting the same data the sheet
+     itself already exposes. For real access control you'd need a
+     real backend that checks identity before ever sending data to
+     the browser.
+
+     Accounts come live from the Sheet's "User" tab (columns User,
+     Pass, Rights, BU): Rights = "Admin" sees every affiliation;
+     any other Rights value sees only its own BU's data, plus
+     anything listed in PUBLIC_AFFILIATIONS below.
+     ========================================================= */
+  var USER_SHEET_GID = "645095962";
+
+  // BU values every account can see, regardless of their own Rights/BU.
+  // Add more exact BU strings here (comma-separated) if other affiliations
+  // should also be open to everyone.
+  var PUBLIC_AFFILIATIONS = ["รถสำรอง"];
+
+  // Deployed Apps Script web app URL — login attempts (success/failure) are
+  // posted here to be appended to the "Log" tab. Leave blank to skip logging.
+  var LOG_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx2lZVZD0MrjxeNVrPXCt5-8QMy2gAQ6ZPSnJOr8fEI5B4Gc0RuiMY_koYubNw-19WT/exec";
+
+  function detectUserCols(cols) {
+    var idx = { username: -1, password: -1, rights: -1, bu: -1 };
+    cols.forEach(function (c, i) {
+      var l = (c.label || "").trim().toLowerCase();
+      if (idx.username === -1 && l.indexOf("user") !== -1) idx.username = i;
+      if (idx.password === -1 && l.indexOf("pass") !== -1) idx.password = i;
+      if (idx.rights === -1 && (l.indexOf("right") !== -1 || l.indexOf("สิทธิ") !== -1)) idx.rights = i;
+      if (idx.bu === -1 && (l === "bu" || l.indexOf("สังกัด") !== -1 || l.indexOf("affiliation") !== -1)) idx.bu = i;
+    });
+    return idx;
+  }
+
+  function fetchUsers() {
+    return loadGvizTable(SHEET_ID, USER_SHEET_GID).then(function (table) {
+      var cols = table.cols || [];
+      var idx = detectUserCols(cols);
+      // Defensive fallback: if header-label matching found nothing at all
+      // (e.g. the sheet has no detected header row), fall back to the
+      // known fixed column order for the User tab: User, Pass, Rights, BU.
+      if (idx.username === -1 && idx.password === -1 && idx.rights === -1 && idx.bu === -1 && cols.length >= 4) {
+        idx = { username: 0, password: 1, rights: 2, bu: 3 };
+      }
+      var list = [];
+      (table.rows || []).forEach(function (row) {
+        var c = row.c || [];
+        function get(i) { return i === -1 ? "" : gvizCellToRaw(c[i], cols[i] && cols[i].type); }
+        var username = String(get(idx.username) || "").trim();
+        if (!username) return;
+        var password = String(get(idx.password) || "").trim();
+        var rights = String(get(idx.rights) || "").trim();
+        var bu = String(get(idx.bu) || "").trim();
+        // BU can hold one affiliation or several, comma-separated (e.g. "Fleet ศรีราชา, PTG ลำปาง")
+        var buList = bu ? bu.split(",").map(function (s) { return s.trim(); }).filter(Boolean) : [];
+        var isAdmin = /^admin$/i.test(rights);
+        list.push({
+          username: username,
+          password: password,
+          name: username,
+          rights: rights,
+          bu: bu,
+          roleLabel: isAdmin ? "แอดมิน (ทุกสังกัด)" : "ผู้ใช้งาน (" + (buList.join(", ") || "-") + ")",
+          affiliations: isAdmin ? null : buList
+        });
+      });
+      return list;
+    });
+  }
+
+  // Shared secret sent along with write requests (updating user rights).
+  // This is a speed bump, not real security — anyone who can read this file's
+  // source can also read this value. Set the SAME string in the Apps Script's
+  // ADMIN_WRITE_TOKEN before relying on this for anything beyond casual use.
+  var ADMIN_WRITE_TOKEN = "changeme";
+
+  function postToWebhook(payload) {
+    if (!LOG_WEBHOOK_URL) return Promise.resolve();
+    try {
+      return fetch(LOG_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      }).catch(function () { /* best-effort; ignore network errors */ });
+    } catch (e) { return Promise.resolve(); }
+  }
+
+  function logAttempt(username, success) {
+    postToWebhook({ username: username, success: success, timestamp: new Date().toISOString() });
+  }
+
+  function saveUserRights(username, rights, buArray) {
+    return postToWebhook({
+      action: "updateUserRights",
+      adminToken: ADMIN_WRITE_TOKEN,
+      username: username,
+      rights: rights,
+      bu: buArray.join(", ")
+    });
+  }
+
+  var currentUser = null;
+  var loginOverlay = document.getElementById("loginOverlay");
+  var appShell = document.getElementById("appShell");
+  var loginForm = document.getElementById("loginForm");
+  var loginError = document.getElementById("loginError");
+  var loginUsernameInput = document.getElementById("loginUsername");
+  var loginPasswordInput = document.getElementById("loginPassword");
+  var loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
+
+  var USERS = [];
+  var usersLoadError = null;
+  function loadUsersOnce() {
+    return fetchUsers().then(function (list) {
+      USERS = list;
+      usersLoadError = null;
+      console.debug("[login] loaded " + list.length + " user(s) from the Sheet's User tab:", list.map(function (u) { return u.username; }));
+    }).catch(function (err) {
+      usersLoadError = err.message || String(err);
+      console.error("[login] failed to load the User tab:", err);
+    });
+  }
+  var usersLoadPromise = loadUsersOnce();
+
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    loginError.textContent = "";
+    var u = loginUsernameInput.value.trim();
+    var p = loginPasswordInput.value;
+    var originalLabel = loginSubmitBtn.textContent;
+    loginSubmitBtn.disabled = true;
+    loginSubmitBtn.textContent = "กำลังตรวจสอบ...";
+    usersLoadPromise.then(function () {
+      loginSubmitBtn.disabled = false;
+      loginSubmitBtn.textContent = originalLabel;
+
+      // If loading the User tab itself failed (wrong sharing permission on
+      // that tab, network hiccup, etc.), say so plainly instead of showing
+      // a misleading "wrong username/password" — and retry in the background
+      // so the next login attempt gets a fresh chance.
+      if (usersLoadError || USERS.length === 0) {
+        loginError.textContent = usersLoadError
+          ? "โหลดรายชื่อผู้ใช้จากชีตไม่สำเร็จ: " + usersLoadError + " — ตรวจสอบว่าแท็บ \"User\" แชร์เป็น \"ทุกคนที่มีลิงก์ดูได้\" เหมือนแท็บข้อมูลหลัก แล้วลองอีกครั้ง"
+          : "ไม่พบรายชื่อผู้ใช้ในแท็บ \"User\" ของชีต กรุณาตรวจสอบข้อมูลในชีต";
+        usersLoadPromise = loadUsersOnce();
+        return;
+      }
+
+      var match = null;
+      for (var i = 0; i < USERS.length; i++) {
+        if (USERS[i].username === u && USERS[i].password === p) { match = USERS[i]; break; }
+      }
+      if (!match) {
+        loginError.textContent = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+        logAttempt(u, false);
+        return;
+      }
+      currentUser = match;
+      logAttempt(u, true);
+      document.getElementById("userChipName").textContent = "👤 " + match.name;
+      document.getElementById("userChipRole").textContent = match.roleLabel;
+      adminToolTab.style.display = match.affiliations === null ? "" : "none";
+      loginOverlay.style.display = "none";
+      appShell.style.display = "";
+      loadAndBuild();
+    });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", function () {
+    currentUser = null;
+    appShell.style.display = "none";
+    loginOverlay.style.display = "flex";
+    loginUsernameInput.value = "";
+    loginPasswordInput.value = "";
+    loginError.textContent = "";
+    adminToolTab.style.display = "none";
+    adminSectionEl.style.display = "none";
+    violationsSectionEl.style.display = "none";
+    timelineSectionEl.style.display = "";
+    Array.prototype.forEach.call(toolTabs.querySelectorAll("button"), function (x) { x.classList.toggle("active", x.getAttribute("data-tool") === "timeline"); });
+  });
+
+  /* =========================================================
+     Utility functions ported 1:1 from TripTimeline.tsx
+     ========================================================= */
+  var DAY_ABBR = ["จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส.", "อา."];
+  var DRIVER_COLORS = [
+    "hsl(217 91% 60%)", "hsl(12 88% 59%)", "hsl(142 71% 45%)",
+    "hsl(280 68% 60%)", "hsl(43 96% 56%)", "hsl(199 89% 48%)"
+  ];
+
+  function parseDateTime(s) {
+    if (!s) return null;
+    s = String(s).trim();
+    var dt = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (dt) {
+      var d = dt[1], mo = dt[2], y = dt[3], h = dt[4], mm = dt[5];
+      var iso = y + "-" + mo.padStart(2, "0") + "-" + d.padStart(2, "0");
+      return { dateISO: iso, minutes: parseInt(h, 10) * 60 + parseInt(mm, 10) };
+    }
+    var t = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (t) return { dateISO: null, minutes: parseInt(t[1], 10) * 60 + parseInt(t[2], 10) };
+    return null;
+  }
+
+  function isoDiffDays(fromISO, toISO) {
+    var a = new Date(fromISO + "T00:00:00Z").getTime();
+    var b = new Date(toISO + "T00:00:00Z").getTime();
+    return Math.round((b - a) / 86400000);
+  }
+
+  function getWeekStart(iso) {
+    var d = new Date(iso + "T00:00:00Z");
+    var day = d.getUTCDay();
+    var diff = (day + 6) % 7;
+    d.setUTCDate(d.getUTCDate() - diff);
+    return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
+  }
+
+  function fmtThaiDate(iso) {
+    var d = new Date(iso + "T00:00:00Z");
+    return d.toLocaleDateString("th-TH", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
+  }
+
+  function segmentForPeriod(start, end, hoursDecimal, groupStartISO, periodDays) {
+    var ps = parseDateTime(start);
+    var pe = parseDateTime(end);
+    if (!ps) return null;
+    var periodMin = periodDays * 1440;
+    var sDayOffset = ps.dateISO ? isoDiffDays(ps.dateISO, groupStartISO) : 0;
+    var sAbs = ps.minutes - sDayOffset * 1440;
+    var eAbs;
+    if (pe) {
+      var eDayOffset = pe.dateISO ? isoDiffDays(pe.dateISO, groupStartISO) : 0;
+      eAbs = pe.minutes - eDayOffset * 1440;
+    } else {
+      eAbs = sAbs + Math.max(1, Math.round(hoursDecimal * 60));
+    }
+    if (eAbs <= sAbs) eAbs = sAbs + Math.max(1, Math.round(hoursDecimal * 60));
+    var s = Math.max(0, Math.min(periodMin, sAbs));
+    var e = Math.max(0, Math.min(periodMin, eAbs));
+    if (e <= s) return null;
+    return { s: s, e: e };
+  }
+
+  function fmtTime(s) {
+    if (!s) return "";
+    var m = String(s).match(/(\d{1,2}):(\d{2})/);
+    if (!m) return s;
+    return m[1].padStart(2, "0") + ":" + m[2];
+  }
+
+  function fmtPeriodTime(s, groupStartISO) {
+    var p = parseDateTime(s);
+    if (!p) return fmtTime(s);
+    var offset = p.dateISO ? isoDiffDays(p.dateISO, groupStartISO) : 0;
+    var abbr = DAY_ABBR[((offset % 7) + 7) % 7] || "";
+    return abbr + fmtTime(s);
+  }
+
+  function fmtDuration(min) {
+    var h = Math.floor(min / 60);
+    var m = Math.round(min % 60);
+    if (h <= 0) return m + " นาที";
+    return h + " ชม. " + m + " นาที";
+  }
+
+  function fmtHours(h) {
+    var total = Math.round(h * 60);
+    return Math.floor(total / 60) + ":" + String(total % 60).padStart(2, "0");
+  }
+
+  // Duration of a trip in minutes, computed the exact same way the Timeline's
+  // day view does for its own ⚠ indicators (segmentForPeriod with periodDays=1,
+  // using the trip's own date as the period). Keeping this identical to the
+  // Timeline's calculation is what keeps the Dashboards numbers consistent
+  // with the ⚠ markers actually shown on the Timeline.
+  function tripDurationMinutes(t) {
+    var seg = segmentForPeriod(t.start, t.end, t.hoursDecimal, t.dateISO, 1);
+    return seg ? (seg.e - seg.s) : 0;
+  }
+
+  function segTitle(seg, prefix) {
+    prefix = prefix || "";
+    var rest = seg.rest == null ? "พักก่อนหน้า: —" : "พักก่อนหน้านี้: " + fmtDuration(seg.rest);
+    var lines = [
+      prefix + "Trip " + seg.t.tripNumber,
+      "ทะเบียน: " + (seg.t.plate || "-"),
+      "เริ่ม: " + seg.t.start,
+      "สิ้นสุด: " + seg.t.end,
+      "ระยะเวลา: " + (seg.t.hours || fmtDuration(seg.e - seg.s)),
+      rest
+    ];
+    if ((seg.e - seg.s) > 240) lines.push("⚠ ขับต่อเนื่องเกิน 4 ชั่วโมง");
+    return lines.join("\n");
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* =========================================================
+     Column-mapping parse helpers
+     ========================================================= */
+  function parseFlexibleDateToISO(raw) {
+    if (!raw) return null;
+    var s = String(raw).trim();
+    var m = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    if (m) return m[3] + "-" + m[2].padStart(2, "0") + "-" + m[1].padStart(2, "0");
+    m = s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);
+    if (m) return m[1] + "-" + m[2].padStart(2, "0") + "-" + m[3].padStart(2, "0");
+    return null;
+  }
+
+  function parseHoursToDecimal(raw) {
+    if (raw === null || raw === undefined || raw === "") return 0;
+    if (typeof raw === "number") return raw;
+    var s = String(raw).trim();
+    var m = s.match(/(\d{1,3}):(\d{2})(?::(\d{2}))?/);
+    if (m) return parseInt(m[1], 10) + parseInt(m[2], 10) / 60 + (m[3] ? parseInt(m[3], 10) / 3600 : 0);
+    var m2 = s.replace(",", ".").match(/-?\d+(\.\d+)?/);
+    if (m2) { var f = parseFloat(m2[0]); return isNaN(f) ? 0 : f; }
+    return 0;
+  }
+
+  /* =========================================================
+     Google Sheet loading via the gviz JSONP endpoint
+     ========================================================= */
+  var jsonpCounter = 0;
+  function loadGvizJsonp(sheetId, tabRef) {
+    return new Promise(function (resolve, reject) {
+      var cbName = "__gvizCb_" + Date.now() + "_" + (jsonpCounter++);
+      var script = document.createElement("script");
+      var timeoutId = setTimeout(function () {
+        cleanup();
+        reject(new Error("หมดเวลาเชื่อมต่อ Google Sheet — ตรวจสอบว่าเปิดสิทธิ์ \"ทุกคนที่มีลิงก์ดูได้\" และ Sheet ID / แท็บ(gid) ถูกต้อง"));
+      }, 60000);
+      function cleanup() {
+        clearTimeout(timeoutId);
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+      window[cbName] = function (json) {
+        cleanup();
+        if (!json || !json.table) { reject(new Error("ไม่พบข้อมูลตารางจาก Google Sheet")); return; }
+        resolve(json.table);
+      };
+      var tabParam = "";
+      var ref = String(tabRef || "").trim();
+      if (ref) {
+        if (/^\d+$/.test(ref)) tabParam = "&gid=" + encodeURIComponent(ref);
+        else tabParam = "&sheet=" + encodeURIComponent(ref);
+      }
+      var url = "https://docs.google.com/spreadsheets/d/" + encodeURIComponent(sheetId) +
+        "/gviz/tq?tqx=out:json;responseHandler:" + cbName + "&headers=1" + tabParam;
+      script.src = url;
+      script.onerror = function () {
+        cleanup();
+        reject(new Error("โหลด Google Sheet ไม่สำเร็จ ตรวจสอบสิทธิ์การเข้าถึง หรือ Sheet ID / แท็บ(gid)"));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  // Fallback: CSV export of the same tab (a different Google endpoint from gviz),
+  // fetched without cookies and converted to the same {cols, rows} shape.
+  function parseCsv(text) {
+    var rows = [], row = [], cur = "", q = false, i = 0, n = text.length;
+    if (text.charCodeAt(0) === 0xFEFF) i = 1;
+    for (; i < n; i++) {
+      var ch = text[i];
+      if (q) {
+        if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r") {
+        if (ch === "\r" && text[i + 1] === "\n") i++;
+        row.push(cur); cur = ""; rows.push(row); row = [];
+      } else cur += ch;
+    }
+    if (cur !== "" || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+  function loadSheetCsv(sheetId, tabRef) {
+    var ref = String(tabRef || "").trim();
+    if (!/^\d+$/.test(ref)) return Promise.reject(new Error("CSV ต้องใช้ gid เป็นตัวเลข"));
+    var url = "https://docs.google.com/spreadsheets/d/" + encodeURIComponent(sheetId) + "/export?format=csv&gid=" + ref;
+    var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var tid = setTimeout(function () { if (ctrl) ctrl.abort(); }, 60000);
+    return fetch(url, { credentials: "omit", signal: ctrl ? ctrl.signal : undefined })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.text();
+      })
+      .then(function (txt) {
+        clearTimeout(tid);
+        if (/^\s*<(!doctype|html)/i.test(txt)) throw new Error("Google ตอบกลับเป็นหน้าเว็บ ไม่ใช่ข้อมูล CSV");
+        var data = parseCsv(txt);
+        if (!data.length) throw new Error("ไม่พบข้อมูลในไฟล์ CSV");
+        var cols = data[0].map(function (h) { return { label: h, type: "string" }; });
+        var rows = data.slice(1).filter(function (r) { return r.some(function (v) { return v !== ""; }); }).map(function (r) {
+          return { c: cols.map(function (_, i) { var v = r[i] === undefined ? "" : r[i]; return v === "" ? null : { v: v, f: v }; }) };
+        });
+        return { cols: cols, rows: rows };
+      }, function (err) { clearTimeout(tid); throw err; });
+  }
+
+  function loadGvizTable(sheetId, tabRef) {
+    return loadGvizJsonp(sheetId, tabRef).catch(function (e1) {
+      console.warn("[gviz] JSONP failed, retrying with fetch:", e1);
+      return loadSheetCsv(sheetId, tabRef).catch(function (e2) {
+        throw new Error("เชื่อมต่อ Google Sheet ไม่สำเร็จ\n• วิธีที่ 1 (script): " + (e1 && e1.message) + "\n• วิธีที่ 2 (CSV): " + (e2 && e2.message) +
+          "\nลองเปิดลิงก์ทดสอบนี้ในหน้าต่างไม่ระบุตัวตน (Incognito): https://docs.google.com/spreadsheets/d/" + sheetId + "/gviz/tq?tqx=out:json&gid=" + tabRef);
+      });
+    });
+  }
+
+  function gvizCellToRaw(cell, colType) {
+    if (!cell) return "";
+    if (cell.f !== undefined && cell.f !== null && cell.f !== "") return cell.f;
+    var v = cell.v;
+    if (v === null || v === undefined) return "";
+    if (colType === "date" || colType === "datetime") {
+      var m = /^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)$/.exec(String(v));
+      if (m) {
+        var Y = +m[1], Mo = +m[2] + 1, D = +m[3];
+        var out = D + "/" + Mo + "/" + Y;
+        if (m[4] !== undefined) out += " " + m[4] + ":" + String(m[5]).padStart(2, "0");
+        return out;
+      }
+    }
+    if (colType === "timeofday" && Array.isArray(v)) {
+      return String(v[0]).padStart(2, "0") + ":" + String(v[1]).padStart(2, "0");
+    }
+    return String(v);
+  }
+
+  /* =========================================================
+     Auto column detection (no manual mapping UI)
+     ========================================================= */
+  var FIELD_DEFS = [
+    { key: "affiliation", keywords: ["สังกัด", "affiliation", "department", "หน่วยงาน", "หน่วย", "เขต", "สาขา", "บริษัท"] },
+    { key: "driver", keywords: ["driver", "ผู้ขับ", "คนขับ", "ชื่อ"] },
+    { key: "plate", keywords: ["plate", "ทะเบียน"] },
+    { key: "date", keywords: ["date", "วันที่"] },
+    { key: "start", keywords: ["start", "เริ่ม", "เข้า", "in"] },
+    { key: "end", keywords: ["end", "สิ้นสุด", "ออก", "out"] },
+    { key: "hours", keywords: ["ขับสะสม", "hour", "ชั่วโมง", "duration", "ระยะเวลา"] },
+    { key: "trip", keywords: ["trip", "เที่ยว", "ลำดับ", "no"] }
+  ];
+
+  function autoDetectMapping(cols) {
+    var used = {};
+    var mapping = {};
+    FIELD_DEFS.forEach(function (def) {
+      var found = -1;
+      // Keyword-priority order: check the field's FIRST keyword against every column
+      // before falling back to the next keyword, so a specific match (e.g. "ขับสะสม")
+      // always wins over a looser generic one, regardless of column position.
+      for (var k = 0; k < def.keywords.length && found === -1; k++) {
+        var kw = def.keywords[k].toLowerCase();
+        for (var i = 0; i < cols.length; i++) {
+          if (used[i]) continue;
+          var label = (cols[i].label || "").toLowerCase();
+          if (label.indexOf(kw) !== -1) { found = i; break; }
+        }
+      }
+      if (found !== -1) used[found] = true;
+      mapping[def.key] = found;
+    });
+    return mapping;
+  }
+
+  /* =========================================================
+     App state
+     ========================================================= */
+  var state = {
+    records: [],
+    cumulativeRecords: [],
+    affiliations: [], drivers: [], plates: [],
+    dateBounds: { min: "", max: "" },
+    filters: { selectedAffiliations: [], selectedDrivers: [], selectedPlates: [], fromDate: "", toDate: "" },
+    ui: { groupBy: "day", zoom: 1 }
+  };
+
+  /* =========================================================
+     Build TripRecord[] from raw gviz table + column mapping
+     ========================================================= */
+  function buildTripRecords(table, mapping) {
+    var cols = table.cols || [];
+    var rows = table.rows || [];
+    var records = [];
+    var autoTripCounter = {};
+
+    function get(row, idx) {
+      if (idx === null || idx === undefined || idx < 0) return "";
+      return gvizCellToRaw((row.c || [])[idx], cols[idx] && cols[idx].type);
+    }
+
+    rows.forEach(function (row) {
+      var driver = String(get(row, mapping.driver) || "").trim();
+      if (!driver) return;
+      var affiliation = String(get(row, mapping.affiliation) || "").trim();
+      var plate = String(get(row, mapping.plate) || "").trim();
+      var rawDate = get(row, mapping.date);
+      var rawStart = get(row, mapping.start);
+      var rawEnd = get(row, mapping.end);
+      var rawHours = get(row, mapping.hours);
+      var rawTrip = mapping.trip != null && mapping.trip >= 0 ? String(get(row, mapping.trip) || "").trim() : "";
+
+      var dateISO = parseFlexibleDateToISO(rawDate);
+      var startTest = parseDateTime(rawStart);
+      if (!dateISO && startTest && startTest.dateISO) dateISO = startTest.dateISO;
+      if (!dateISO) return;
+
+      var dateDisplay = rawDate;
+      if (!dateDisplay) {
+        var parts0 = dateISO.split("-");
+        dateDisplay = parseInt(parts0[2], 10) + "/" + parseInt(parts0[1], 10) + "/" + parts0[0];
+      }
+
+      var hoursDecimal = rawHours !== "" ? parseHoursToDecimal(rawHours) : 0;
+
+      var start = rawStart;
+      var ps = parseDateTime(start);
+      if (ps && !ps.dateISO) {
+        var p1 = dateISO.split("-");
+        start = parseInt(p1[2], 10) + "/" + parseInt(p1[1], 10) + "/" + p1[0] + " " + start;
+      }
+
+      var end = rawEnd;
+      if (end) {
+        var pe = parseDateTime(end);
+        if (pe && !pe.dateISO && ps) {
+          var endDateISO = dateISO;
+          if (pe.minutes <= ps.minutes) {
+            var d0 = new Date(dateISO + "T00:00:00Z");
+            d0.setUTCDate(d0.getUTCDate() + 1);
+            endDateISO = d0.getUTCFullYear() + "-" + String(d0.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d0.getUTCDate()).padStart(2, "0");
+          }
+          var p2 = endDateISO.split("-");
+          end = parseInt(p2[2], 10) + "/" + parseInt(p2[1], 10) + "/" + p2[0] + " " + end;
+        }
+      }
+
+      var hoursDisplay = rawHours ? (typeof rawHours === "string" ? rawHours : fmtHours(hoursDecimal)) : (hoursDecimal ? fmtHours(hoursDecimal) : "");
+
+      var key = driver + "|" + dateISO;
+      autoTripCounter[key] = (autoTripCounter[key] || 0) + 1;
+      var tripNumber = rawTrip || autoTripCounter[key];
+
+      records.push({
+        driver: driver, affiliation: affiliation, plate: plate, date: dateDisplay, dateISO: dateISO,
+        start: start, end: end, hours: hoursDisplay, hoursDecimal: hoursDecimal,
+        tripNumber: tripNumber
+      });
+    });
+
+    return records;
+  }
+
+  /* =========================================================
+     Build daily cumulative-driving records from the
+     "ขับสะสมทั้งวัน" tab (วันที่ / ชื่อผู้ขับขี่ / ทะเบียน / ขับสะสม / สังกัด).
+     One row per driver per day — no start/end times here, just the
+     sheet's own pre-computed total for that day (col D).
+     ========================================================= */
+  function buildCumulativeRecords(table) {
+    var cols = table.cols || [];
+    var rows = table.rows || [];
+    var mapping = autoDetectMapping(cols);
+    var records = [];
+
+    function get(row, idx) {
+      if (idx === null || idx === undefined || idx < 0) return "";
+      return gvizCellToRaw((row.c || [])[idx], cols[idx] && cols[idx].type);
+    }
+
+    rows.forEach(function (row) {
+      var driver = String(get(row, mapping.driver) || "").trim();
+      if (!driver) return;
+      var affiliation = String(get(row, mapping.affiliation) || "").trim();
+      var plate = String(get(row, mapping.plate) || "").trim();
+      var dateISO = parseFlexibleDateToISO(get(row, mapping.date));
+      if (!dateISO) return;
+      var totalMin = Math.round(parseHoursToDecimal(get(row, mapping.hours)) * 60);
+
+      records.push({ driver: driver, affiliation: affiliation, plate: plate, dateISO: dateISO, totalMin: totalMin });
+    });
+
+    return records;
+  }
+
+  /* =========================================================
+     Multi-select dropdown component
+     ========================================================= */
+  function createMultiSelect(container, opts) {
+    var st = { items: opts.items || [], selected: opts.selected || [], open: false, query: "" };
+    container.innerHTML =
+      '<div class="msel">' +
+      '  <button type="button" class="msel-btn"><span class="label"></span><span class="arrow">▾</span></button>' +
+      '  <div class="msel-panel">' +
+      '    <div class="msel-search"><input type="text" placeholder="ค้นหา..." /></div>' +
+      '    <div class="msel-list"></div>' +
+      '    <div class="msel-foot"><span class="count"></span><div class="actions">'+(opts.selectAll?'<button type="button" class="btn-link all-btn">เลือกทั้งหมด</button>':'')+'<button type="button" class="btn-link clear-btn">ล้าง</button><button type="button" class="btn-link close-btn">ปิด</button></div></div>' +
+      '  </div>' +
+      '</div>';
+    var root = container.querySelector(".msel");
+    var btn = root.querySelector(".msel-btn");
+    var labelEl = root.querySelector(".label");
+    var panel = root.querySelector(".msel-panel");
+    var searchInput = root.querySelector(".msel-search input");
+    var listEl = root.querySelector(".msel-list");
+    var countEl = root.querySelector(".count");
+    var clearBtn = root.querySelector(".clear-btn");
+    var closeBtn = root.querySelector(".close-btn");
+
+    function renderLabel() {
+      var sel = st.selected, text;
+      if (sel.length === 0) text = '<span class="placeholder">' + escapeHtml(opts.placeholder) + '</span>';
+      else if (sel.length <= 2) text = escapeHtml(sel.join(", "));
+      else text = escapeHtml(sel.slice(0, 2).join(", ")) + " +" + (sel.length - 2);
+      labelEl.innerHTML = text;
+    }
+
+    function renderList() {
+      var q = st.query.toLowerCase();
+      var filtered = q ? st.items.filter(function (it) { return it.toLowerCase().indexOf(q) !== -1; }) : st.items;
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div class="msel-empty">ไม่พบข้อมูล</div>';
+      } else {
+        listEl.innerHTML = filtered.map(function (it) {
+          var checked = st.selected.indexOf(it) !== -1 ? "checked" : "";
+          return '<label><input type="checkbox" data-val="' + escapeHtml(it) + '" ' + checked + ' /><span>' + escapeHtml(it) + '</span></label>';
+        }).join("");
+      }
+      countEl.textContent = "เลือกแล้ว " + st.selected.length + " " + opts.unitLabel;
+    }
+
+    listEl.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t && t.matches('input[type="checkbox"]')) {
+        var val = t.getAttribute("data-val");
+        var idx = st.selected.indexOf(val);
+        if (idx === -1) st.selected.push(val); else st.selected.splice(idx, 1);
+        renderLabel();
+        countEl.textContent = "เลือกแล้ว " + st.selected.length + " " + opts.unitLabel;
+        if (opts.onChange) opts.onChange(st.selected.slice());
+      }
+    });
+    searchInput.addEventListener("input", function () { st.query = searchInput.value; renderList(); });
+    btn.addEventListener("click", function () {
+      st.open = !st.open;
+      panel.classList.toggle("open", st.open);
+      if (st.open) { searchInput.value = ""; st.query = ""; renderList(); searchInput.focus(); }
+    });
+    clearBtn.addEventListener("click", function () {
+      st.selected = [];
+      renderLabel(); renderList();
+      if (opts.onChange) opts.onChange(st.selected.slice());
+    });
+    var allBtn = root.querySelector(".all-btn");
+    if (allBtn) allBtn.addEventListener("click", function () {
+      var q = st.query.toLowerCase();
+      var vis = q ? st.items.filter(function (it) { return it.toLowerCase().indexOf(q) !== -1; }) : st.items;
+      vis.forEach(function (it) { if (st.selected.indexOf(it) === -1) st.selected.push(it); });
+      renderLabel(); renderList();
+      if (opts.onChange) opts.onChange(st.selected.slice());
+    });
+    closeBtn.addEventListener("click", function () { st.open = false; panel.classList.remove("open"); });
+    document.addEventListener("mousedown", function (e) {
+      if (!root.contains(e.target)) { st.open = false; panel.classList.remove("open"); }
+    });
+
+    renderLabel();
+
+    return {
+      setItems: function (items) { st.items = items; renderList(); },
+      getSelected: function () { return st.selected.slice(); },
+      setSelected: function (sel) { st.selected = sel.slice(); renderLabel(); renderList(); }
+    };
+  }
+
+  var affMsel = createMultiSelect(document.getElementById("affMsel"), {
+    items: [], selected: [], placeholder: "-- เลือกสังกัด --", unitLabel: "สังกัด",
+    onChange: function (sel) { state.filters.selectedAffiliations = sel; renderResults(); }
+  });
+  var driverMsel = createMultiSelect(document.getElementById("driverMsel"), {
+    items: [], selected: [], placeholder: "-- เลือกผู้ขับขี่ --", unitLabel: "คน",
+    onChange: function (sel) { state.filters.selectedDrivers = sel; renderResults(); }
+  });
+  var plateMsel = createMultiSelect(document.getElementById("plateMsel"), {
+    items: [], selected: [], placeholder: "-- เลือกทะเบียน --", unitLabel: "คัน",
+    onChange: function (sel) { state.filters.selectedPlates = sel; renderResults(); }
+  });
+
+  /* =========================================================
+     Date range popover (button trigger + two date inputs)
+     ========================================================= */
+  function createDateRange(container, opts) {
+    container.innerHTML =
+      '<div class="drange">' +
+      '  <button type="button" class="drange-btn">🗓 <span class="label"></span><span class="arrow">▾</span></button>' +
+      '  <div class="drange-panel">' +
+      '    <div class="drange-body">' +
+      '      <div class="drange-field"><label>จาก</label><input type="date" class="from-input" /></div>' +
+      '      <div class="drange-field"><label>ถึง</label><input type="date" class="to-input" /></div>' +
+      '    </div>' +
+      '    <div class="drange-foot"><button type="button" class="btn-link clear-btn">ล้างช่วงวันที่</button><button type="button" class="btn-link close-btn">ปิด</button></div>' +
+      '  </div>' +
+      '</div>';
+    var root = container.querySelector(".drange");
+    var btn = root.querySelector(".drange-btn");
+    var labelEl = root.querySelector(".label");
+    var panel = root.querySelector(".drange-panel");
+    var fromInput = root.querySelector(".from-input");
+    var toInput = root.querySelector(".to-input");
+    var clearBtn = root.querySelector(".clear-btn");
+    var closeBtn = root.querySelector(".close-btn");
+    var open = false;
+    var value = { from: "", to: "" };
+
+    function fmt(iso) {
+      if (!iso) return "";
+      var d = new Date(iso + "T00:00:00Z");
+      return d.toLocaleDateString("th-TH", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
+    }
+    function renderLabel() {
+      var text;
+      if (value.from && value.to) text = fmt(value.from) + " – " + fmt(value.to);
+      else if (value.from) text = fmt(value.from) + " – ...";
+      else text = null;
+      labelEl.innerHTML = text ? escapeHtml(text) : '<span class="placeholder">-- เลือกช่วงวันที่ --</span>';
+    }
+    function fireChange() { if (opts.onChange) opts.onChange(value.from, value.to); }
+
+    fromInput.addEventListener("change", function () { value.from = fromInput.value; renderLabel(); fireChange(); });
+    toInput.addEventListener("change", function () { value.to = toInput.value; renderLabel(); fireChange(); });
+    btn.addEventListener("click", function () { open = !open; panel.classList.toggle("open", open); });
+    clearBtn.addEventListener("click", function () {
+      value = { from: "", to: "" }; fromInput.value = ""; toInput.value = ""; renderLabel(); fireChange();
+    });
+    closeBtn.addEventListener("click", function () { open = false; panel.classList.remove("open"); });
+    document.addEventListener("mousedown", function (e) { if (!root.contains(e.target)) { open = false; panel.classList.remove("open"); } });
+
+    renderLabel();
+
+    return {
+      setBounds: function (min, max) { if (min) { fromInput.min = min; toInput.min = min; } if (max) { fromInput.max = max; toInput.max = max; } },
+      reset: function () { value = { from: "", to: "" }; fromInput.value = ""; toInput.value = ""; renderLabel(); }
+    };
+  }
+
+  var dateRange = createDateRange(document.getElementById("dateRangeWrap"), {
+    onChange: function (from, to) { state.filters.fromDate = from; state.filters.toDate = to; renderResults(); }
+  });
+
+  /* =========================================================
+     Reset filters
+     ========================================================= */
+  document.getElementById("resetFiltersBtn").addEventListener("click", function () {
+    state.filters = { selectedAffiliations: [], selectedDrivers: [], selectedPlates: [], fromDate: "", toDate: "" };
+    affMsel.setSelected([]); driverMsel.setSelected([]); plateMsel.setSelected([]);
+    dateRange.reset();
+    renderResults();
+  });
+
+  /* =========================================================
+     Tool tabs (Timeline / Dashboards / Admin)
+     ========================================================= */
+  var toolTabs = document.getElementById("toolTabs");
+  var timelineSectionEl = document.getElementById("timelineSection");
+  var violationsSectionEl = document.getElementById("violationsSection");
+  var adminSectionEl = document.getElementById("adminSection");
+  var adminToolTab = document.getElementById("adminToolTab");
+  toolTabs.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-tool]");
+    if (!b) return;
+    var tool = b.getAttribute("data-tool");
+    Array.prototype.forEach.call(toolTabs.querySelectorAll("button"), function (x) { x.classList.toggle("active", x === b); });
+    timelineSectionEl.style.display = tool === "timeline" ? "" : "none";
+    violationsSectionEl.style.display = tool === "violations" ? "" : "none";
+    adminSectionEl.style.display = tool === "admin" ? "" : "none";
+    readySectionEl.style.display = tool === "ready" ? "" : "none";
+    if (tool === "ready") renderReady();
+    if (tool === "admin") renderAdminPanel();
+  });
+
+  /* =========================================================
+     Timeline toolbar
+     ========================================================= */
+  var groupByGroup = document.getElementById("groupByGroup");
+  var zoomLabel = document.getElementById("zoomLabel");
+  groupByGroup.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-group]");
+    if (!b) return;
+    state.ui.groupBy = b.getAttribute("data-group");
+    Array.prototype.forEach.call(groupByGroup.querySelectorAll("button"), function (x) { x.classList.toggle("active", x === b); });
+    renderTimeline();
+  });
+  function setZoom(z) {
+    state.ui.zoom = Math.min(8, Math.max(1, +z.toFixed(2)));
+    zoomLabel.textContent = state.ui.zoom.toFixed(1) + "x";
+    renderTimeline();
+  }
+  document.getElementById("zoomOut").addEventListener("click", function () { setZoom(Math.max(1, state.ui.zoom - 0.5)); });
+  document.getElementById("zoomIn").addEventListener("click", function () { setZoom(Math.min(8, state.ui.zoom + 0.5)); });
+  document.getElementById("zoomReset").addEventListener("click", function () { setZoom(1); });
+
+  var timelineBody = document.getElementById("timelineBody");
+  timelineBody.addEventListener("wheel", function (e) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // let horizontal scroll gestures pass through untouched
+    e.preventDefault();
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
+    setZoom(state.ui.zoom * Math.exp(-dy * 0.002));
+  }, { passive: false });
+
+  /* =========================================================
+     Theme toggle (in-memory only for this session)
+     ========================================================= */
+  var themeToggle = document.getElementById("themeToggle");
+  var isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  function applyTheme() {
+    document.documentElement.classList.toggle("dark", isDark);
+    themeToggle.textContent = isDark ? "☀️ สว่าง" : "🌙 มืด";
+  }
+  applyTheme();
+  themeToggle.addEventListener("click", function () { isDark = !isDark; applyTheme(); });
+
+  /* =========================================================
+     Live clock — "เสาร์ 12 ก.ย. 2569 16:08:33"
+     ========================================================= */
+  var THAI_WEEKDAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+  var THAI_MONTHS_SHORT = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+  var clockBox = document.getElementById("clockBox");
+  function updateClock() {
+    var now = new Date();
+    var weekday = THAI_WEEKDAYS[now.getDay()];
+    var day = now.getDate();
+    var month = THAI_MONTHS_SHORT[now.getMonth()];
+    var year = now.getFullYear() + 543;
+    var hh = String(now.getHours()).padStart(2, "0");
+    var mm = String(now.getMinutes()).padStart(2, "0");
+    var ss = String(now.getSeconds()).padStart(2, "0");
+    clockBox.textContent = weekday + " " + day + " " + month + " " + year + " " + hh + ":" + mm + ":" + ss;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* =========================================================
+     Load + refresh
+     ========================================================= */
+  var refreshBtn = document.getElementById("refreshBtn");
+
+  function showFatalError(msg) {
+    timelineBody.innerHTML = '<div class="tl-error">โหลดข้อมูลไม่สำเร็จ:\n' + escapeHtml(msg) + '</div>';
+  }
+
+  function loadAndBuild() {
+    refreshBtn.disabled = true;
+    refreshBtn.textContent = "กำลังโหลด... (ชีตใหญ่อาจใช้เวลาถึง 1 นาที)";
+    Promise.all([
+      loadGvizTable(SHEET_ID, GID),
+      // Cumulative-driving tab is best-effort: if it fails to load, the app
+      // still works — it just falls back to no over-10h data rather than
+      // breaking the whole dashboard.
+      loadGvizTable(SHEET_ID, CUMULATIVE_GID).catch(function (err) {
+        console.error("[cumulative] failed to load \"ขับสะสมทั้งวัน\" tab:", err);
+        return null;
+      })
+    ])
+      .then(function (results) {
+        var table = results[0];
+        var cumTable = results[1];
+
+        var mapping = autoDetectMapping(table.cols || []);
+        if (mapping.driver === -1 || mapping.start === -1 || mapping.end === -1) {
+          var headers = (table.cols || []).map(function (c) { return c.label || "(ไม่มีชื่อคอลัมน์)"; }).join(", ");
+          showFatalError(
+            "ไม่พบคอลัมน์ที่จำเป็น (ผู้ขับขี่ / เวลาเริ่ม / เวลาสิ้นสุด) ในแท็บนี้โดยอัตโนมัติ\n" +
+            "หัวคอลัมน์ที่พบในชีต: " + headers
+          );
+          return;
+        }
+        var records = buildTripRecords(table, mapping);
+        var cumRecords = cumTable ? buildCumulativeRecords(cumTable) : [];
+        // Role-based visibility: a "User"-rights account only sees their own
+        // assigned BU plus anything in PUBLIC_AFFILIATIONS (open to everyone).
+        // This filters the in-memory dataset itself, so restricted
+        // affiliations never appear in any dropdown, chart, or the
+        // Dashboards — not just hidden behind a UI toggle.
+        if (currentUser && currentUser.affiliations) {
+          var allowed = currentUser.affiliations.concat(PUBLIC_AFFILIATIONS);
+          records = records.filter(function (r) { return allowed.indexOf(r.affiliation) !== -1; });
+          cumRecords = cumRecords.filter(function (r) { return allowed.indexOf(r.affiliation) !== -1; });
+        }
+        if (records.length === 0) {
+          showFatalError("อ่านข้อมูลได้ แต่ไม่สามารถแปลงเป็นรายการ Trip ได้ (ตรวจสอบรูปแบบวันที่/เวลาในชีต หรือสิทธิ์การมองเห็นสังกัดของบัญชีนี้)");
+          return;
+        }
+        state.records = records;
+        state.cumulativeRecords = cumRecords;
+        buildFilterOptions();
+        document.getElementById("filtersSection").style.display = "";
+        renderResults();
+      })
+      .catch(function (err) { showFatalError(err.message || String(err)); })
+      .finally(function () { refreshBtn.disabled = false; refreshBtn.textContent = "รีเฟรชข้อมูล"; });
+  }
+
+  refreshBtn.addEventListener("click", loadAndBuild);
+
+  /* =========================================================
+     Build filter option lists from loaded records
+     ========================================================= */
+  function buildFilterOptions() {
+    var affSet = {}, driverSet = {}, plateSet = {};
+    state.records.forEach(function (r) {
+      if (r.affiliation) affSet[r.affiliation] = true;
+      driverSet[r.driver] = true;
+      if (r.plate) plateSet[r.plate] = true;
+    });
+    state.affiliations = Object.keys(affSet).sort(function (a, b) { return a.localeCompare(b, "th"); });
+    state.drivers = Object.keys(driverSet).sort(function (a, b) { return a.localeCompare(b, "th"); });
+    state.plates = Object.keys(plateSet).sort(function (a, b) { return a.localeCompare(b, "th"); });
+
+    var isoList = state.records.map(function (r) { return r.dateISO; }).sort();
+    state.dateBounds = { min: isoList[0] || "", max: isoList[isoList.length - 1] || "" };
+    dateRange.setBounds(state.dateBounds.min, state.dateBounds.max);
+
+    affMsel.setItems(state.affiliations);
+    driverMsel.setItems(state.drivers);
+    plateMsel.setItems(state.plates);
+
+    if (currentUser && currentUser.affiliations === null) renderAdminPanel();
+  }
+
+  /* =========================================================
+     Admin: user rights management (admin-role accounts only)
+     ========================================================= */
+  function renderAdminPanel() {
+    var list = document.getElementById("adminUserList");
+    if (!currentUser || currentUser.affiliations !== null) { list.innerHTML = ""; return; }
+    if (!USERS.length) { list.innerHTML = '<div class="hbar-empty">ไม่พบผู้ใช้ในแท็บ "User"</div>'; return; }
+
+    list.innerHTML = "";
+    USERS.slice().sort(function (a, b) { return a.username.localeCompare(b.username); }).forEach(function (u) {
+      var row = document.createElement("div");
+      row.className = "admin-row";
+      row.innerHTML =
+        '<div class="admin-user">' + escapeHtml(u.username) + '</div>' +
+        '<select class="select admin-rights"><option value="User">User</option><option value="Admin">Admin</option></select>' +
+        '<div class="admin-bu-msel"></div>' +
+        '<div class="admin-save-row"><button class="btn btn-primary admin-save" type="button">บันทึก</button><span class="admin-status"></span></div>';
+      list.appendChild(row);
+
+      var rightsSel = row.querySelector(".admin-rights");
+      rightsSel.value = /^admin$/i.test(u.rights) ? "Admin" : "User";
+
+      var buWrap = row.querySelector(".admin-bu-msel");
+      var buMsel = createMultiSelect(buWrap, {
+        items: state.affiliations.slice(),
+        selected: u.affiliations ? u.affiliations.slice() : [],
+        placeholder: "-- เลือกสังกัดที่มองเห็นได้ --",
+        unitLabel: "สังกัด",
+        onChange: function () { }
+      });
+
+      row.querySelector(".admin-save").addEventListener("click", function () {
+        var status = row.querySelector(".admin-status");
+        var rights = rightsSel.value;
+        var buSelected = buMsel.getSelected();
+        status.textContent = "กำลังส่งคำขอบันทึก...";
+        saveUserRights(u.username, rights, buSelected).then(function () {
+          status.textContent = "ส่งคำขอแล้ว ✓ (กด \"รีเฟรชรายชื่อผู้ใช้\" เพื่อตรวจสอบ)";
+        });
+      });
+    });
+  }
+
+  document.getElementById("adminRefreshBtn").addEventListener("click", function () {
+    var btn = document.getElementById("adminRefreshBtn");
+    btn.disabled = true;
+    loadUsersOnce().then(function () {
+      btn.disabled = false;
+      renderAdminPanel();
+    });
+  });
+
+  /* =========================================================
+     Filtering (AND across all active filters) + aggregation
+     ========================================================= */
+  function getFiltered() {
+    var f = state.filters;
+    return state.records.filter(function (t) {
+      if (f.selectedAffiliations.length && f.selectedAffiliations.indexOf(t.affiliation) === -1) return false;
+      if (f.selectedDrivers.length && f.selectedDrivers.indexOf(t.driver) === -1) return false;
+      if (f.selectedPlates.length && f.selectedPlates.indexOf(t.plate) === -1) return false;
+      if (f.fromDate && t.dateISO < f.fromDate) return false;
+      if (f.toDate && t.dateISO > f.toDate) return false;
+      return true;
+    });
+  }
+
+  // Same active-filter set, applied to the "ขับสะสมทั้งวัน" (daily cumulative) tab.
+  function getFilteredCumulative() {
+    var f = state.filters;
+    return state.cumulativeRecords.filter(function (r) {
+      if (f.selectedAffiliations.length && f.selectedAffiliations.indexOf(r.affiliation) === -1) return false;
+      if (f.selectedDrivers.length && f.selectedDrivers.indexOf(r.driver) === -1) return false;
+      if (f.selectedPlates.length && f.selectedPlates.indexOf(r.plate) === -1) return false;
+      if (f.fromDate && r.dateISO < f.fromDate) return false;
+      if (f.toDate && r.dateISO > f.toDate) return false;
+      return true;
+    });
+  }
+
+  function renderResults() {
+    var filtered = getFiltered();
+
+    var drSet = {}, daySet = {};
+    filtered.forEach(function (t) { drSet[t.driver] = true; daySet[t.dateISO] = true; });
+    document.getElementById("statRecords").textContent = filtered.length.toLocaleString();
+    document.getElementById("statDrivers").textContent = Object.keys(drSet).length;
+    document.getElementById("statDays").textContent = Object.keys(daySet).length;
+
+    renderTimeline(filtered);
+    renderViolations(filtered);
+    if (readySectionEl.style.display !== "none") renderReady();
+  }
+
+  /* =========================================================
+     Violations report — over-4h trips, over-10h days
+     ========================================================= */
+  function fmtShortDate(iso) {
+    var p = iso.split("-");
+    return p[2] + "/" + p[1];
+  }
+
+  function renderHBarChart(container, items) {
+    if (!items.length) { container.innerHTML = '<div class="hbar-empty">ไม่พบข้อมูลตามเงื่อนไขนี้</div>'; return; }
+    var max = Math.max.apply(null, items.map(function (i) { return i.value; }));
+    max = Math.max(max, 1);
+    container.innerHTML = items.map(function (i) {
+      var pct = Math.max(3, (i.value / max) * 100);
+      return '<div class="hbar-row">' +
+        '<div class="hbar-label" title="' + escapeHtml(i.label) + '">' + escapeHtml(i.label) + '</div>' +
+        '<div class="hbar-track"><div class="hbar-fill" style="width:' + pct + '%; background:' + i.color + ';"></div></div>' +
+        '<div class="hbar-value">' + i.value.toLocaleString() + '</div>' +
+        '</div>';
+    }).join("");
+  }
+
+  function renderTrendChart(container, byDate, dateOrder) {
+    if (!dateOrder.length) { container.innerHTML = '<div class="trend-empty">ไม่พบข้อมูลตามเงื่อนไขนี้</div>'; return; }
+    var maxVal = 1;
+    dateOrder.forEach(function (d) { maxVal = Math.max(maxVal, byDate[d].a, byDate[d].b); });
+    var showLabelEvery = Math.max(1, Math.ceil(dateOrder.length / 20));
+    container.innerHTML = dateOrder.map(function (d, idx) {
+      var v = byDate[d];
+      var hA = v.a > 0 ? Math.max(4, (v.a / maxVal) * 140) : 0;
+      var hB = v.b > 0 ? Math.max(4, (v.b / maxVal) * 140) : 0;
+      var label = idx % showLabelEvery === 0 ? fmtShortDate(d) : "";
+      var tip = fmtThaiDate(d) + " — ขับเกิน 4 ชม.: " + v.a + " ครั้ง, ผู้ขับขี่ที่ขับรวมเกิน 10 ชม.ในวันนี้: " + v.b + " คน";
+      return '<div class="trend-col" title="' + escapeHtml(tip) + '">' +
+        '<div class="trend-bars">' +
+        '<div class="trend-bar" style="height:' + hA + 'px; background:#F59E0B;"></div>' +
+        '<div class="trend-bar" style="height:' + hB + 'px; background:#DC2626;"></div>' +
+        '</div>' +
+        '<div class="trend-date">' + escapeHtml(label) + '</div>' +
+        '</div>';
+    }).join("");
+  }
+
+  var THAI_MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var THAI_DOW = ["อา.","จ.","อ.","พ.","พฤ.","ศ.","ส."];
+  var calState = { month: null, days: {} };
+
+  // Monthly calendar of total driving hours per day (sum of each driver's
+  // "ขับสะสม" for that day, from the "ขับสะสมทั้งวัน" tab).
+  // Clock text for an absolute minute count (minutes since epoch); "(+1)" when it falls on a later date than iso.
+  function calClock(abs, iso) {
+    var m = ((abs % 1440) + 1440) % 1440;
+    var dd = Math.floor(abs / 1440) - Math.round(Date.parse(iso + "T00:00:00Z") / 86400000);
+    return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0") + (dd > 0 ? " (+" + dd + ")" : "");
+  }
+
+  function renderCalendar() {
+    var container = document.getElementById("calChart");
+    var days = calState.days;
+    var dates = Object.keys(days).sort();
+    if (!dates.length) { container.innerHTML = '<div class="trend-empty">ไม่พบข้อมูลตามเงื่อนไขนี้</div>'; return; }
+    var months = [];
+    dates.forEach(function (d) { var m = d.slice(0, 7); if (months.indexOf(m) === -1) months.push(m); });
+    if (!calState.month || months.indexOf(calState.month) === -1) calState.month = months[months.length - 1];
+    var mi = months.indexOf(calState.month);
+    var y = parseInt(calState.month.slice(0, 4), 10), m = parseInt(calState.month.slice(5, 7), 10);
+    var maxMin = 1;
+    dates.forEach(function (d) { maxMin = Math.max(maxMin, days[d].min / days[d].n); });
+
+    // Whole-month figures: average per driver per day (all driver-days pooled).
+    var monSum = 0, monCnt = 0, monDays = 0, monOver = 0;
+    dates.forEach(function (d) {
+      if (d.slice(0, 7) !== calState.month) return;
+      monSum += days[d].min; monCnt += days[d].n; monDays += 1; monOver += days[d].over;
+    });
+    var html = '<div class="cal-head">' +
+      '<button type="button" class="cal-nav" data-dir="-1"' + (mi === 0 ? " disabled" : "") + '>◀</button>' +
+      '<div class="cal-title">' + THAI_MONTHS[m - 1] + " " + y + '</div>' +
+      '<button type="button" class="cal-nav" data-dir="1"' + (mi === months.length - 1 ? " disabled" : "") + '>▶</button>' +
+      '</div>' +
+      '<div class="cal-month-sum"><div><span>ค่าเฉลี่ยทั้งเดือน</span><b>' + fmtHours(monSum / monCnt / 60) + ' ชม./คน/วัน</b></div>' +
+      '<div><span>ขับรวมทั้งเดือน</span><b>' + fmtHours(monSum / 60) + ' ชม.</b></div>' +
+      '<div><span>วันที่มีข้อมูล</span><b>' + monDays + ' วัน</b></div>' +
+      '<div><span>ครั้งที่ขับเกิน 10 ชม.</span><b style="color:var(--destructive)">' + monOver + ' ครั้ง</b></div></div>' +
+      '<div class="cal-grid">';
+    THAI_DOW.forEach(function (n) { html += '<div class="cal-dow">' + n + '</div>'; });
+    var firstDow = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+    var daysInMonth = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    for (var i = 0; i < firstDow; i++) html += '<div class="cal-cell empty"></div>';
+    for (var day = 1; day <= daysInMonth; day++) {
+      var iso = calState.month + "-" + String(day).padStart(2, "0");
+      var v = days[iso];
+      if (!v) {
+        html += '<div class="cal-cell"><div class="cal-day"><span>' + day + '</span></div></div>';
+        continue;
+      }
+      var avgMin = v.min / v.n;
+      var alpha = (0.12 + (avgMin / maxMin) * 0.55).toFixed(2);
+      html += '<div class="cal-cell" data-iso="' + iso + '" style="background:rgba(76,175,130,' + alpha + '); cursor:pointer;">' +
+        '<div class="cal-day"><span>' + day + '</span>' + (v.over ? '<span class="cal-over">⚠ ' + v.over + '</span>' : "") + '</div>' +
+        '<div class="cal-hours">' + fmtHours(avgMin / 60) + '</div>' +
+        '<div class="cal-sub">ชม./คน · ' + v.n + ' คน</div>' +
+        (v.first != null ? '<div class="cal-time"><b>เข้า</b> ' + calClock(v.first, iso) + '<br><b>ออก</b> ' + calClock(v.last, iso) + '</div>' : "") + '</div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  document.getElementById("calChart").addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest(".cal-nav");
+    if (!btn || btn.disabled) return;
+    var months = [];
+    Object.keys(calState.days).sort().forEach(function (d) { var mm = d.slice(0, 7); if (months.indexOf(mm) === -1) months.push(mm); });
+    var idx = months.indexOf(calState.month) + parseInt(btn.getAttribute("data-dir"), 10);
+    if (idx >= 0 && idx < months.length) { calState.month = months[idx]; renderCalendar(); }
+  });
+
+  // Click-through detail dialog: every driver for the day with their cumulative driving total.
+  var calModal = document.createElement("div");
+  calModal.className = "cal-modal";
+  calModal.innerHTML = '<div class="cal-modal-box"><div class="cal-modal-top"><div><div class="cal-modal-title"></div><div class="cal-modal-sum"></div></div>' +
+    '<button type="button" class="cal-modal-close" aria-label="ปิด">✕</button></div><div class="cal-modal-body"></div></div>';
+  document.body.appendChild(calModal);
+  function closeCalDetail() { calModal.classList.remove("open"); }
+  calModal.addEventListener("click", function (e) {
+    if (e.target === calModal || (e.target.closest && e.target.closest(".cal-modal-close"))) closeCalDetail();
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeCalDetail(); });
+
+  function timePart(str) {
+    var m = String(str || "").match(/(\d{1,2}:\d{2})(?::\d{2})?\s*$/);
+    return m ? m[1] : String(str || "-");
+  }
+
+  // Timeline (00-24h) for one calendar day: every driver in the current filter, one bar per trip.
+  function buildDayTimelineHtml(iso, order) {
+    var trips = getFiltered().filter(function (t) { return t.dateISO === iso; });
+    var by = {};
+    trips.forEach(function (t) { (by[t.driver] = by[t.driver] || []).push(t); });
+    var names = order.filter(function (n) { return by[n]; });
+    Object.keys(by).forEach(function (n) { if (names.indexOf(n) === -1) names.push(n); });
+    if (!names.length) return '<div class="tl-empty">ไม่มีทริปของวันนี้ตามตัวกรอง</div>';
+    var sorted = names.slice().sort(function (a, b) { return a.localeCompare(b, "th"); });
+    var cum = {};
+    calState.days[iso].list.forEach(function (r) { cum[r.driver] = r.min; });
+    var h = '<div class="tl-scroll"><div style="min-width:640px;">';
+    names.forEach(function (driver) {
+      var color = DRIVER_COLORS[sorted.indexOf(driver) % DRIVER_COLORS.length];
+      var segs = by[driver].map(function (t) {
+        var seg = segmentForPeriod(t.start, t.end, t.hoursDecimal, iso, 1);
+        return seg ? { s: seg.s, e: seg.e, t: t, rest: null } : null;
+      }).filter(function (x) { return !!x; }).sort(function (a, b) { return a.s - b.s; });
+      for (var i = 1; i < segs.length; i++) segs[i].rest = Math.max(0, segs[i].s - segs[i - 1].e);
+      var cm = cum[driver];
+      var over = cm !== undefined && cm > 600;
+      h += '<div class="tl-row"><div class="tl-driver-name" style="color:' + color + '" title="' + escapeHtml(driver) + '"><span>' + (over ? '<span style="color:#B91C1C;margin-right:3px;">⚠</span>' : "") + escapeHtml(driver) +
+        '</span><span style="opacity:.8;">' + (cm !== undefined ? fmtHours(cm / 60) : "") + '</span></div><div class="tl-track">';
+      segs.forEach(function (seg) {
+        var left = (seg.s / 1440) * 100, width = ((seg.e - seg.s) / 1440) * 100;
+        var pxWidth = width * 8;
+        var label = fmtTime(seg.t.start) + "-" + fmtTime(seg.t.end);
+        var text = pxWidth > 90 ? ("#" + seg.t.tripNumber + " " + label) : (pxWidth > 30 ? ("#" + seg.t.tripNumber) : "");
+        var cls = "tl-seg" + ((seg.e - seg.s) > 240 ? " tl-seg-warn" : "");
+        h += '<div class="' + cls + '" style="left:' + left + '%; width:' + Math.max(0.3, width) + '%; background:' + color + ';" title="' + escapeHtml(segTitle(seg)) + '">' + escapeHtml(text) + '</div>';
+      });
+      h += '</div></div>';
+    });
+    h += '<div class="tl-axis-row"><div></div><div class="tl-axis">';
+    for (var hh = 0; hh <= 24; hh++) h += '<span style="left:' + ((hh / 24) * 100) + '%;">' + hh + '</span>';
+    h += '</div></div></div></div>';
+    return h;
+  }
+
+  function openCalDetail(iso) {
+    var v = calState.days[iso];
+    if (!v) return;
+    calModal.querySelector(".cal-modal-title").textContent = fmtThaiDate(iso);
+    calModal.querySelector(".cal-modal-sum").textContent = "เฉลี่ย " + fmtHours(v.min / v.n / 60) + " ชม./คน · ขับรวม " + fmtHours(v.min / 60) + " ชม. · " + v.n + " คน" + (v.over ? " · เกิน 10 ชม. " + v.over + " คน" : "");
+    var list = v.list.slice().sort(function (a, b) { return b.min - a.min; });
+    var html = list.map(function (r) {
+      var over = r.min > 600;
+      return '<div class="cal-drv' + (over ? " over" : "") + '"><div class="cal-drv-head"><span>' + (over ? "⚠ " : "") + escapeHtml(r.driver) +
+        (r.plate ? ' <small>(' + escapeHtml(r.plate) + ')</small>' : "") + '</span><span>ขับสะสม ' + fmtHours(r.min / 60) + ' ชม.</span></div>' +
+        (r.first != null ? '<div class="cal-drv-time">เข้าครั้งแรก ' + calClock(r.first, iso) + ' · ออกครั้งสุดท้าย ' + calClock(r.last, iso) + '</div>' : "") + '</div>';
+    }).join("");
+    var tlHtml = buildDayTimelineHtml(iso, list.map(function (r) { return r.driver; }));
+    html = '<div><div class="tl-group-label">ไทม์ไลน์ประจำวัน</div>' + tlHtml + '</div>' +
+      '<div><div class="tl-group-label">สรุปรายคน</div>' + html + '</div>';
+    calModal.querySelector(".cal-modal-box").classList.add("wide");
+    calModal.querySelector(".cal-modal-body").innerHTML = html;
+    calModal.querySelector(".cal-modal-body").scrollTop = 0;
+    calModal.classList.add("open");
+  }
+
+  (function () {
+    var box = document.getElementById("calChart");
+    // Click a day: open the per-driver detail dialog (also covers touch screens).
+    box.addEventListener("click", function (e) {
+      var c = e.target.closest ? e.target.closest(".cal-cell[data-iso]") : null;
+      if (c) openCalDetail(c.getAttribute("data-iso"));
+    });
+  })();
+
+  function topEntries(map, n) {
+    return Object.keys(map).map(function (k) { return { label: k, value: map[k] }; })
+      .sort(function (a, b) { return b.value - a.value; }).slice(0, n);
+  }
+
+  var vioState = { overFour: [], overTen: [], allDays: [] };
+
+  function showDetailModal(title, sum, html) {
+    calModal.querySelector(".cal-modal-box").classList.remove("wide");
+    calModal.querySelector(".cal-modal-title").textContent = title;
+    calModal.querySelector(".cal-modal-sum").textContent = sum;
+    calModal.querySelector(".cal-modal-body").innerHTML = html;
+    calModal.querySelector(".cal-modal-body").scrollTop = 0;
+    calModal.classList.add("open");
+  }
+
+  // Timeline-style detail for one driver on one day (same bars/colours/warnings as the Timeline page).
+  function openDayTimelineDetail(driver, iso) {
+    var cum = vioState.allDays.filter(function (d) { return d.driver === driver && d.dateISO === iso; });
+    var cumMin = cum.reduce(function (a, d) { return a + d.totalMin; }, 0);
+    var plate = cum.length && cum[0].plate ? cum[0].plate : "";
+    var isOver = cumMin > 600;
+    var nameList = {};
+    getFiltered().forEach(function (t) { nameList[t.driver] = true; });
+    var names = Object.keys(nameList).sort(function (a, b) { return a.localeCompare(b, "th"); });
+    var color = DRIVER_COLORS[(names.indexOf(driver) < 0 ? 0 : names.indexOf(driver)) % DRIVER_COLORS.length];
+
+    var segs = state.records.filter(function (t) { return t.driver === driver && t.dateISO === iso; })
+      .map(function (t) {
+        var seg = segmentForPeriod(t.start, t.end, t.hoursDecimal, iso, 1);
+        return seg ? { s: seg.s, e: seg.e, t: t, rest: null } : null;
+      }).filter(function (x) { return !!x; })
+      .sort(function (a, b) { return a.s - b.s; });
+    for (var i = 1; i < segs.length; i++) segs[i].rest = Math.max(0, segs[i].s - segs[i - 1].e);
+
+    var html = '<div class="tl-row"><div class="tl-driver-name" style="color:' + color + '"><span>' + (isOver ? '<span style="color:#B91C1C; margin-right:3px;">⚠</span>' : "") +
+      escapeHtml(driver) + '</span><span style="opacity:.8;">' + fmtHours(cumMin / 60) + '</span></div><div class="tl-track">';
+    segs.forEach(function (seg) {
+      var left = (seg.s / 1440) * 100;
+      var width = ((seg.e - seg.s) / 1440) * 100;
+      var pxWidth = width * 5;
+      var text = pxWidth > 90 ? ("#" + seg.t.tripNumber + " " + fmtTime(seg.t.start) + "-" + fmtTime(seg.t.end)) : (pxWidth > 30 ? ("#" + seg.t.tripNumber) : "");
+      var isLong = (seg.e - seg.s) > 240;
+      html += '<div class="tl-seg' + (isLong ? " tl-seg-warn" : "") + '" style="left:' + left + '%; width:' + Math.max(0.3, width) + '%; background:' + color + ';" title="' + escapeHtml(segTitle(seg)) + '">' + escapeHtml(text) + '</div>';
+    });
+    html += '</div></div><div class="tl-axis-row"><div></div><div class="tl-axis">';
+    for (var h = 0; h <= 24; h += 2) html += '<span style="left:' + ((h / 24) * 100) + '%;">' + h + '</span>';
+    html += '</div></div>';
+    if (!segs.length) html += '<div class="cal-none">ไม่พบรายการทริปของวันนี้ในแท็บข้อมูลทริป</div>';
+    html += '<div class="cal-none">เอาเมาส์ชี้ที่แท่งเพื่อดูรายละเอียดทริป · แท่งที่มี ⚠ คือขับต่อเนื่องเกิน 4 ชม.</div>';
+
+    showDetailModal(driver + " — " + fmtThaiDate(iso),
+      "ขับสะสม " + fmtHours(cumMin / 60) + " ชม." + (plate ? " · ทะเบียน " + plate : "") + (isOver ? " · เกิน 10 ชม." : ""), html);
+  }
+
+  // Click a heatmap cell: over-4h -> the long trips; over-10h -> that day's cumulative total.
+  function openHeatmapDetail(kind, driver, iso) {
+    if (kind === "c") { openDayTimelineDetail(driver, iso); return; }
+    if (kind === "a") {
+      var trips = vioState.overFour.filter(function (t) { return t.driver === driver && t.dateISO === iso; })
+        .sort(function (a, b) { return timePart(a.start) < timePart(b.start) ? -1 : 1; });
+      var html = trips.map(function (t) {
+        return '<div class="cal-drv over"><div class="cal-drv-head"><span>⚠ ทริป #' + escapeHtml(t.tripNumber) +
+          (t.plate ? ' <small>(' + escapeHtml(t.plate) + ')</small>' : "") + '</span><span>' + escapeHtml(timePart(t.start)) + ' – ' +
+          escapeHtml(timePart(t.end)) + ' · ' + fmtHours(tripDurationMinutes(t) / 60) + ' ชม.</span></div></div>';
+      }).join("");
+      showDetailModal(driver + " — " + fmtThaiDate(iso), "ขับต่อเนื่องเกิน 4 ชม. " + trips.length + " ครั้ง", html);
+    } else {
+      var rows = (kind === "c" ? vioState.allDays : vioState.overTen).filter(function (d) { return d.driver === driver && d.dateISO === iso; });
+      var html2 = rows.map(function (r) {
+        var ov = r.totalMin > 600;
+        return '<div class="cal-drv' + (ov ? " over" : "") + '"><div class="cal-drv-head"><span>' + (ov ? "⚠ " : "") + escapeHtml(r.driver) +
+          (r.plate ? ' <small>(' + escapeHtml(r.plate) + ')</small>' : "") + '</span><span>ขับสะสม ' + fmtHours(r.totalMin / 60) + ' ชม.</span></div></div>';
+      }).join("");
+      showDetailModal(driver + " — " + fmtThaiDate(iso), kind === "c" ? "ชั่วโมงขับสะสมรวมของวัน" : "ขับเกิน 10 ชม./วัน", html2);
+    }
+  }
+
+  [["heatmapA", "a"], ["heatmapB", "b"], ["heatmapC", "c"]].forEach(function (x) {
+    document.getElementById(x[0]).addEventListener("click", function (e) {
+      var td = e.target.closest ? e.target.closest(".heatmap-cell[data-r]") : null;
+      if (td) openHeatmapDetail(x[1], td.getAttribute("data-r"), td.getAttribute("data-c"));
+    });
+  });
+
+  // Renders a driver x day/week breakdown grid. cellMap: { rowLabel: { colKey: count } }
+  function renderHeatmap(container, opts) {
+    if (!opts.rows.length || !opts.cols.length) {
+      container.innerHTML = '<div class="hbar-empty">ไม่พบข้อมูลตามเงื่อนไขนี้</div>';
+      return;
+    }
+    var maxVal = 1;
+    opts.rows.forEach(function (r) {
+      opts.cols.forEach(function (c) {
+        var v = (opts.cellMap[r] && opts.cellMap[r][c]) || 0;
+        if (v > maxVal) maxVal = v;
+      });
+    });
+    var hasAvg = !!opts.avgMap;
+    var html = '<div class="heatmap-scroll"><table class="heatmap-table"><thead><tr><th class="heatmap-corner"' + (hasAvg ? ' style="width:9rem;min-width:9rem;max-width:9rem;box-sizing:border-box;"' : '') + '></th>' +
+      (hasAvg ? '<th class="heatmap-avghead">เฉลี่ย/วัน</th>' : '');
+    opts.cols.forEach(function (c) { html += '<th>' + escapeHtml(opts.colLabelFn(c)) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    opts.rows.forEach(function (r) {
+      html += '<tr><th class="heatmap-rowlabel" title="' + escapeHtml(r) + '"' + (hasAvg ? ' style="width:9rem;min-width:9rem;max-width:9rem;box-sizing:border-box;"' : '') + '>' + escapeHtml(r) + '</th>';
+      if (hasAvg) {
+        var av = opts.avgMap[r] || 0;
+        html += '<td class="heatmap-avg' + (av > 600 ? ' over' : '') + '">' + fmtHours(av / 60) + '</td>';
+      }
+      opts.cols.forEach(function (c) {
+        var v = (opts.cellMap[r] && opts.cellMap[r][c]) || 0;
+        var style = "";
+        if (v > 0 && opts.cellStyleFn) {
+          style = opts.cellStyleFn(v);
+        } else if (v > 0) {
+          var alpha = Math.min(1, 0.22 + (v / maxVal) * 0.78);
+          style = 'background:rgba(' + (opts.colorRgb || "220,38,38") + ',' + alpha.toFixed(2) + ');';
+        }
+        var title = opts.cellTitleFn(r, c, v);
+        var cellText = v > 0 ? (opts.cellTextFn ? opts.cellTextFn(v) : v) : "";
+        html += '<td class="heatmap-cell" style="' + style + '" title="' + escapeHtml(title) + '"' +
+          (v > 0 ? ' data-r="' + escapeHtml(r) + '" data-c="' + escapeHtml(c) + '"' : "") + '>' + escapeHtml(cellText) + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  }
+
+  function renderViolations(filteredArg) {
+    var filtered = filteredArg || getFiltered();
+
+    // A) Each trip whose own duration exceeds 4 hours
+    var overFour = filtered.filter(function (t) { return tripDurationMinutes(t) > 240; });
+
+    // B) Each driver-day whose cumulative driving exceeds 10 hours — read
+    // directly from the "ขับสะสมทั้งวัน" tab's own Col D value (ขับสะสม),
+    // not summed from individual trips.
+    var overTen = getFilteredCumulative().filter(function (d) { return d.totalMin > 600; });
+
+    // Stat cards
+    var involvedDrivers = {};
+    overFour.forEach(function (t) { involvedDrivers[t.driver] = true; });
+    overTen.forEach(function (d) { involvedDrivers[d.driver] = true; });
+    document.getElementById("violStats").innerHTML =
+      '<div class="viol-stat"><div class="num">' + overFour.length.toLocaleString() + '</div><div class="lbl">ครั้ง — ขับเกิน 4 ชม./ช่วงเวลา</div></div>' +
+      '<div class="viol-stat"><div class="num">' + overTen.length.toLocaleString() + '</div><div class="lbl">วัน-คน — ขับเกิน 10 ชม./วัน</div></div>' +
+      '<div class="viol-stat"><div class="num">' + Object.keys(involvedDrivers).length.toLocaleString() + '</div><div class="lbl">ผู้ขับขี่ที่มีการละเมิดอย่างน้อย 1 ครั้ง</div></div>';
+
+    // Daily trend
+    var byDate = {};
+    overFour.forEach(function (t) {
+      if (!byDate[t.dateISO]) byDate[t.dateISO] = { a: 0, b: 0 };
+      byDate[t.dateISO].a += 1;
+    });
+    overTen.forEach(function (d) {
+      if (!byDate[d.dateISO]) byDate[d.dateISO] = { a: 0, b: 0 };
+      byDate[d.dateISO].b += 1;
+    });
+    var dateOrder = Object.keys(byDate).sort();
+    var calDays = {};
+    // First start / last end per day (all drivers) and per driver-day, from the trip rows
+    // that start on that day. A last end after midnight is shown as "(+1)".
+    var dayTimes = {}, drvTimes = {};
+    getFiltered().forEach(function (t) {
+      var a = rdAbs(t.start);
+      if (a === null) return;
+      var b = rdAbs(t.end);
+      if (b === null || b < a) b = a;
+      var dt = dayTimes[t.dateISO] || (dayTimes[t.dateISO] = { first: a, last: b });
+      if (a < dt.first) dt.first = a;
+      if (b > dt.last) dt.last = b;
+      var k = t.driver + "|" + t.dateISO;
+      var dv = drvTimes[k] || (drvTimes[k] = { first: a, last: b });
+      if (a < dv.first) dv.first = a;
+      if (b > dv.last) dv.last = b;
+    });
+    getFilteredCumulative().forEach(function (r) {
+      if (!calDays[r.dateISO]) {
+        var dtm = dayTimes[r.dateISO];
+        calDays[r.dateISO] = { min: 0, n: 0, over: 0, list: [], first: dtm ? dtm.first : null, last: dtm ? dtm.last : null };
+      }
+      var dvt = drvTimes[r.driver + "|" + r.dateISO];
+      calDays[r.dateISO].list.push({ driver: r.driver, plate: r.plate, min: r.totalMin, first: dvt ? dvt.first : null, last: dvt ? dvt.last : null });
+      calDays[r.dateISO].min += r.totalMin;
+      calDays[r.dateISO].n += 1;
+      if (r.totalMin > 600) calDays[r.dateISO].over += 1;
+    });
+    calState.days = calDays;
+    renderCalendar();
+
+    // Top drivers per violation type
+    var driverACounts = {};
+    overFour.forEach(function (t) { driverACounts[t.driver] = (driverACounts[t.driver] || 0) + 1; });
+    var driverBCounts = {};
+    overTen.forEach(function (d) { driverBCounts[d.driver] = (driverBCounts[d.driver] || 0) + 1; });
+    // Heatmap A: for each driver, how many over-4h trips occurred on each specific day
+    var cellMapA = {};
+    overFour.forEach(function (t) {
+      if (!cellMapA[t.driver]) cellMapA[t.driver] = {};
+      cellMapA[t.driver][t.dateISO] = (cellMapA[t.driver][t.dateISO] || 0) + 1;
+    });
+    var rowsA = Object.keys(driverACounts).sort(function (a, b) { return driverACounts[b] - driverACounts[a]; });
+    var colsA = Object.keys(byDate).filter(function (d) { return byDate[d].a > 0; }).sort();
+    var allDays = getFilteredCumulative().filter(function (d) { return d.totalMin > 0; });
+    vioState.allDays = allDays;
+    var cellMapC = {}, dateSetC = {}, sumC = {};
+    allDays.forEach(function (d) {
+      dateSetC[d.dateISO] = true;
+      if (!cellMapC[d.driver]) cellMapC[d.driver] = {};
+      cellMapC[d.driver][d.dateISO] = (cellMapC[d.driver][d.dateISO] || 0) + d.totalMin;
+      sumC[d.driver] = (sumC[d.driver] || 0) + d.totalMin;
+    });
+    var avgC = {};
+    Object.keys(cellMapC).forEach(function (drv) {
+      var days = Object.keys(cellMapC[drv]);
+      avgC[drv] = sumC[drv] / days.length;
+    });
+    renderHeatmap(document.getElementById("heatmapC"), {
+      avgMap: avgC,
+      rows: Object.keys(sumC).sort(function (a, b) { return sumC[b] - sumC[a]; }),
+      cols: Object.keys(dateSetC).sort(),
+      cellMap: cellMapC,
+      colLabelFn: function (c) { return fmtShortDate(c); },
+      cellTextFn: function (v) { return fmtHours(v / 60); },
+      cellStyleFn: function (v) {
+        return v > 600 ? "background:#DC2626;color:#fff;" : "background:rgba(76,175,130,.14);color:var(--foreground);";
+      },
+      cellTitleFn: function (r, c, v) { return r + " — " + fmtThaiDate(c) + ": ขับรวม " + fmtHours(v / 60) + " ชม." + (v > 600 ? " (เกิน 10 ชม.)" : ""); }
+    });
+    vioState.overFour = overFour;
+    vioState.overTen = overTen;
+    renderHeatmap(document.getElementById("heatmapA"), {
+      rows: rowsA,
+      cols: colsA,
+      cellMap: cellMapA,
+      colorRgb: "245,158,11",
+      kind: "a",
+      colLabelFn: function (c) { return fmtShortDate(c); },
+      cellTitleFn: function (r, c, v) { return r + " — " + fmtThaiDate(c) + ": ขับต่อเนื่องเกิน 4 ชม. " + v + " ครั้ง"; }
+    });
+
+    // Heatmap B: for each driver, on each specific day that exceeded 10 hours,
+    // show the actual total hours driven that day (not a count — a single day
+    // can only ever be "over 10h" once, so a count would always be 1 and isn't useful).
+    var cellMapB = {};
+    var dateSetB = {};
+    overTen.forEach(function (d) {
+      dateSetB[d.dateISO] = true;
+      if (!cellMapB[d.driver]) cellMapB[d.driver] = {};
+      cellMapB[d.driver][d.dateISO] = d.totalMin;
+    });
+    var rowsB = Object.keys(driverBCounts).sort(function (a, b) { return driverBCounts[b] - driverBCounts[a]; });
+    var colsB = Object.keys(dateSetB).sort();
+    renderHeatmap(document.getElementById("heatmapB"), {
+      rows: rowsB,
+      cols: colsB,
+      cellMap: cellMapB,
+      colorRgb: "220,38,38",
+      colLabelFn: function (c) { return fmtShortDate(c); },
+      cellTextFn: function (v) { return fmtHours(v / 60); },
+      cellTitleFn: function (r, c, v) { return r + " — " + fmtThaiDate(c) + ": ขับรวม " + fmtHours(v / 60) + " ชม. ในวันนี้ (เกิน 10 ชม.)"; }
+    });
+
+    // Affiliation breakdown (only shown when there's more than one affiliation in play)
+    var affCounts = {};
+    overFour.forEach(function (t) { if (t.affiliation) affCounts[t.affiliation] = (affCounts[t.affiliation] || 0) + 1; });
+    overTen.forEach(function (d) { if (d.affiliation) affCounts[d.affiliation] = (affCounts[d.affiliation] || 0) + 1; });
+    var affWrap = document.getElementById("affiliationChartWrap");
+    if (Object.keys(affCounts).length > 1) {
+      affWrap.style.display = "";
+      renderHBarChart(document.getElementById("chartAffiliation"), topEntries(affCounts, 15).map(function (i) { return { label: i.label, value: i.value, color: "#4CAF82" }; }));
+    } else {
+      affWrap.style.display = "none";
+    }
+  }
+
+  /* =========================================================
+     Timeline rendering (ported from TripTimeline.tsx)
+     ========================================================= */
+  function renderTimeline(filteredArg) {
+    var filtered = filteredArg || getFiltered();
+    var f = state.filters;
+    var hasActiveFilter = f.selectedAffiliations.length > 0 || f.selectedDrivers.length > 0 || f.selectedPlates.length > 0;
+    var groupBy = state.ui.groupBy;
+    var zoom = state.ui.zoom;
+
+    if (!hasActiveFilter) {
+      timelineBody.innerHTML = '<div class="tl-empty">เลือกตัวกรองอย่างน้อย 1 อย่าง (สังกัด / ผู้ขับขี่ / ทะเบียนรถ) เพื่อดูไทม์ไลน์</div>';
+      return;
+    }
+
+    // Driver list to display is derived from whatever matches the active filters,
+    // not only from the driver dropdown — so filtering by affiliation or plate alone works too.
+    var driverSet = {};
+    filtered.forEach(function (t) { driverSet[t.driver] = true; });
+    var drivers = Object.keys(driverSet).sort(function (a, b) { return a.localeCompare(b, "th"); });
+
+    var driverColor = {};
+    drivers.forEach(function (d, i) { driverColor[d] = DRIVER_COLORS[i % DRIVER_COLORS.length]; });
+
+    // Over-10h warning icon is based on the "ขับสะสมทั้งวัน" tab's own daily
+    // total (Col D), not on the segments actually drawn for this view.
+    var cumMap = {};
+    getFilteredCumulative().forEach(function (r) {
+      if (!cumMap[r.driver]) cumMap[r.driver] = {};
+      cumMap[r.driver][r.dateISO] = r.totalMin;
+    });
+
+    var periodDays = groupBy === "week" ? 7 : 1;
+    var periodMinutes = periodDays * 1440;
+    function groupKey(dateISO) { return groupBy === "week" ? getWeekStart(dateISO) : dateISO; }
+
+    var byGroupMap = {};
+    var order = [];
+    filtered.forEach(function (t) {
+      if (!t.dateISO) return;
+      var key = groupKey(t.dateISO);
+      if (!byGroupMap[key]) { byGroupMap[key] = {}; order.push(key); }
+      if (!byGroupMap[key][t.driver]) byGroupMap[key][t.driver] = [];
+      byGroupMap[key][t.driver].push(t);
+    });
+    order.sort();
+
+    if (order.length === 0) {
+      timelineBody.innerHTML = '<div class="tl-empty">ไม่มีข้อมูลตามเงื่อนไข</div>';
+      return;
+    }
+
+    function groupLabel(keyISO) {
+      if (groupBy === "day") {
+        var dm = byGroupMap[keyISO];
+        var driverNames = Object.keys(dm);
+        var displayDate = driverNames.length && dm[driverNames[0]][0] ? dm[driverNames[0]][0].date : null;
+        return displayDate || fmtThaiDate(keyISO);
+      }
+      var start = new Date(keyISO + "T00:00:00Z");
+      var end = new Date(start.getTime());
+      end.setUTCDate(end.getUTCDate() + 6);
+      var endISO = end.getUTCFullYear() + "-" + String(end.getUTCMonth() + 1).padStart(2, "0") + "-" + String(end.getUTCDate()).padStart(2, "0");
+      return "สัปดาห์ " + fmtThaiDate(keyISO) + " – " + fmtThaiDate(endISO);
+    }
+
+    var hours = []; for (var h = 0; h <= 24; h++) hours.push(h);
+    var days = [0, 1, 2, 3, 4, 5, 6];
+
+    var html = "";
+
+    order.forEach(function (groupISO) {
+      var driverMap = byGroupMap[groupISO];
+      var activeDrivers = drivers.filter(function (d) { return !!driverMap[d]; });
+
+      function toSegments(driver) {
+        var trips = driverMap[driver];
+        var segs = trips.map(function (t) {
+          var seg = segmentForPeriod(t.start, t.end, t.hoursDecimal, groupISO, periodDays);
+          if (!seg) return null;
+          return { s: seg.s, e: seg.e, t: t, rest: null };
+        }).filter(function (x) { return !!x; });
+        segs.sort(function (a, b) { return a.s - b.s; });
+        for (var i = 1; i < segs.length; i++) segs[i].rest = Math.max(0, segs[i].s - segs[i - 1].e);
+        return segs;
+      }
+
+      // Compute segments + total minutes per driver up front so rows can be
+      // sorted by total hours driven (highest first) within this group.
+      var driverRows = activeDrivers.map(function (driver) {
+        var segments = toSegments(driver);
+        var totalMin = segments.reduce(function (sum, s) { return sum + (s.e - s.s); }, 0);
+        return { driver: driver, segments: segments, totalMin: totalMin };
+      });
+      driverRows.sort(function (a, b) { return b.totalMin - a.totalMin; });
+
+      html += '<div>';
+      html += '<div class="tl-group-label">' + escapeHtml(groupLabel(groupISO)) + '</div>';
+      html += '<div class="tl-scroll"><div style="width:' + (zoom * 100) + '%; min-width:100%;">';
+
+      driverRows.forEach(function (row) {
+        var driver = row.driver;
+        var color = driverColor[driver];
+        var segments = row.segments;
+        var totalMin = row.totalMin;
+        var cumMin = (periodDays === 1 && cumMap[driver]) ? cumMap[driver][groupISO] : undefined;
+        var isOverDay = cumMin !== undefined && cumMin > 600;
+        // The number shown after the driver's name is the sheet's own daily
+        // cumulative total (col D, "ขับสะสม") when available; falls back to
+        // the segment-summed total only in week view, where no single day's
+        // cumulative figure applies.
+        var displayMin = cumMin !== undefined ? cumMin : totalMin;
+        var nameTitle = driver + " — " + (cumMin !== undefined ? "ขับสะสมทั้งวัน " : "เวลาขับรวม ") + fmtHours(displayMin / 60) +
+          (isOverDay ? " (เกินเกณฑ์ 10 ชั่วโมง)" : "");
+        var warnIcon = isOverDay ? '<span style="color:#B91C1C; margin-right:3px;">⚠</span>' : "";
+        html += '<div class="tl-row">';
+        html += '<div class="tl-driver-name" style="color:' + color + '" title="' + escapeHtml(nameTitle) + '">' +
+          '<span>' + warnIcon + escapeHtml(driver) + '</span><span style="opacity:.8;">' + fmtHours(displayMin / 60) + '</span></div>';
+        html += '<div class="tl-track">';
+        segments.forEach(function (seg) {
+          var left = (seg.s / periodMinutes) * 100;
+          var width = ((seg.e - seg.s) / periodMinutes) * 100;
+          var pxWidth = width * zoom * 8;
+          var label = periodDays > 1
+            ? (fmtPeriodTime(seg.t.start, groupISO) + "-" + fmtPeriodTime(seg.t.end, groupISO))
+            : (fmtTime(seg.t.start) + "-" + fmtTime(seg.t.end));
+          var text = pxWidth > 90 ? ("#" + seg.t.tripNumber + " " + label) : (pxWidth > 30 ? ("#" + seg.t.tripNumber) : "");
+          var isLong = (seg.e - seg.s) > 240;
+          var segClass = "tl-seg" + (isLong ? " tl-seg-warn" : "");
+          html += '<div class="' + segClass + '" style="left:' + left + '%; width:' + Math.max(0.3, width) + '%; background:' + color + ';" title="' + escapeHtml(segTitle(seg)) + '">' + escapeHtml(text) + '</div>';
+        });
+        html += '</div></div>';
+      });
+
+      html += '<div class="tl-axis-row"><div></div><div class="tl-axis">';
+      if (periodDays === 1) {
+        hours.forEach(function (hh) { html += '<span style="left:' + ((hh / 24) * 100) + '%;">' + hh + '</span>'; });
+      } else {
+        days.forEach(function (d) { html += '<span style="left:' + (((d + 0.5) / periodDays) * 100) + '%;">' + DAY_ABBR[d] + '</span>'; });
+      }
+      html += '</div></div>';
+
+      html += '</div></div></div>';
+    });
+
+    timelineBody.innerHTML = html;
+  }
+
+  /* =========================================================
+     Tool: พขร.พร้อมรับงาน
+     ตรวจการขับ/พักตลอดทริป (ข้ามวันได้) ตามกติกา 4 / 4 / 2 ชม.
+     แล้วหาคนที่พร้อมรับงานในเวลาเริ่มงานวันถัดไป
+     ========================================================= */
+  var RD = { CAP: { 1: 240, 2: 240, 3: 120 }, SHORT: 30, LONG: 600 };
+  var rdState = { startStr: "", minHours: 10, status: "all", rows: [] };
+  var readySectionEl = document.getElementById("readySection");
+  var rdPlateKey = "";
+  var rdPlateMsel = createMultiSelect(document.getElementById("rdPlateMsel"), {
+    items: [], selected: [], placeholder: "-- ทุกทะเบียน --", unitLabel: "คัน", selectAll: true,
+    onChange: function () { renderReady(); }
+  });
+
+  function rdPad(n) { return String(n).padStart(2, "0"); }
+  function rdAbs(str) {
+    var p = parseDateTime(str);
+    if (!p || !p.dateISO) return null;
+    return Date.parse(p.dateISO + "T00:00:00Z") / 60000 + p.minutes;
+  }
+  function rdFmt(m) {
+    var d = new Date(m * 60000);
+    return rdPad(d.getUTCDate()) + "/" + rdPad(d.getUTCMonth() + 1) + "/" + d.getUTCFullYear() + " " + rdPad(d.getUTCHours()) + ":" + rdPad(d.getUTCMinutes());
+  }
+  function rdInputToAbs(v) {
+    var m = v && v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) / 60000 : null;
+  }
+  function rdAbsToInput(a) {
+    var d = new Date(a * 60000);
+    return d.getUTCFullYear() + "-" + rdPad(d.getUTCMonth() + 1) + "-" + rdPad(d.getUTCDate()) + "T" + rdPad(d.getUTCHours()) + ":" + rdPad(d.getUTCMinutes());
+  }
+  function rdDur(min) { return fmtDuration(Math.max(0, Math.round(min))); }
+
+  // Walk one driver's trips in time order as a single continuous run (dates ignored).
+  function rdAnalyze(trips) {
+    trips.sort(function (a, b) { return a.s - b.s; });
+    var stage = 1, driven = 0, cycle = 1, cycleDriven = 0, prevEnd = null;
+    var rows = [], viols = [], seen = {};
+    trips.forEach(function (tr) {
+      var s = tr.s, e = tr.e, notes = [], flags = [];
+      if (prevEnd !== null && s < prevEnd) {
+        if (e <= prevEnd) { rows.push({ tr: tr, s: s, e: e, dur: 0, gap: null, stage: stage, driven: driven, cycle: cycle, newCycle: false, flags: [], notes: ["ซ้อนทับกับทริปก่อนหน้า (ข้าม)"], skipped: true }); return; }
+        notes.push("เวลาซ้อนทับทริปก่อนหน้า ตัดส่วนที่ซ้อนออก");
+        s = prevEnd;
+      }
+      var gap = prevEnd === null ? null : s - prevEnd;
+      var newCycle = false;
+      if (gap !== null) {
+        if (gap >= RD.LONG) { stage = 1; driven = 0; cycle++; cycleDriven = 0; newCycle = true; }
+        else if (gap >= RD.SHORT && stage < 3) { stage++; driven = 0; }
+      }
+      var dur = e - s;
+      var cap = RD.CAP[stage];
+      var before = driven;
+      driven += dur;
+      cycleDriven += dur;
+      if (driven > cap) {
+        var type, msg;
+        if (stage < 3) {
+          type = "over4";
+          msg = "ช่วงที่ " + stage + " ขับต่อเนื่องเกิน 4 ชม. โดยไม่พัก ≥30 นาที (ขับแล้ว " + rdDur(driven) + ")";
+        } else if (gap !== null && gap >= RD.SHORT && gap < RD.LONG && before >= cap) {
+          type = "rest10";
+          msg = "จบช่วงที่ 3 แล้วพักเพียง " + rdDur(gap) + " (ต้อง ≥10 ชม.) แต่กลับมาขับอีก";
+        } else {
+          type = "over2";
+          msg = "ช่วงที่ 3 ขับเกิน 2 ชม. (ขับแล้ว " + rdDur(driven) + ") ต้องพักต่อเนื่อง ≥10 ชม.";
+        }
+        flags.push(msg);
+        var key = cycle + "-" + stage + "-" + type;
+        if (!seen[key]) {
+          seen[key] = true;
+          viols.push({ cycle: cycle, stage: stage, type: type, at: s + Math.max(0, cap - before), msg: msg, tr: tr });
+        }
+      }
+      rows.push({ tr: tr, s: s, e: e, dur: dur, gap: gap, stage: stage, driven: driven, cycle: cycle, newCycle: newCycle, flags: flags, notes: notes });
+      prevEnd = Math.max(prevEnd === null ? e : prevEnd, e);
+    });
+    var cycleViol = viols.filter(function (v) { return v.cycle === cycle; }).length;
+    return { rows: rows, viols: viols, last: rows.length ? { stage: stage, driven: driven, end: prevEnd, cycle: cycle, cycleDriven: cycleDriven } : null, cycleViol: cycleViol };
+  }
+
+  // How many driving minutes the driver may still do at time T, given the state after their last trip.
+  function rdAvailability(last, T) {
+    if (!last) return { avail: 600, status: "full" };
+    var g = T - last.end;
+    if (g < 0) return { avail: 0, status: "drv" };
+    if (g >= RD.LONG) return { avail: 600, status: "full" };
+    var st = last.stage, dr = last.driven;
+    if (g >= RD.SHORT && st < 3) { st++; dr = 0; }
+    var avail = Math.max(0, RD.CAP[st] - dr);
+    for (var k = st + 1; k <= 3; k++) avail += RD.CAP[k];
+    return { avail: avail, status: "part" };
+  }
+
+  function rdBuild() {
+    var f = state.filters, match = {}, by = {};
+    state.records.forEach(function (r) {
+      if (f.selectedAffiliations.length && f.selectedAffiliations.indexOf(r.affiliation) === -1) return;
+      if (f.selectedDrivers.length && f.selectedDrivers.indexOf(r.driver) === -1) return;
+      if (f.selectedPlates.length && f.selectedPlates.indexOf(r.plate) === -1) return;
+      match[r.driver] = true;
+    });
+    var T = rdInputToAbs(rdState.startStr);
+    state.records.forEach(function (r) {
+      if (!match[r.driver]) return;
+      var s = rdAbs(r.start);
+      if (s === null) return;
+      if (T !== null && s >= T) return;
+      var e = rdAbs(r.end);
+      if (e === null || e <= s) e = s + Math.max(1, Math.round((r.hoursDecimal || 0) * 60));
+      var d = by[r.driver] || (by[r.driver] = { aff: r.affiliation, trips: [] });
+      d.trips.push({ s: s, e: e, t: r });
+    });
+    // Drivers matched by filters but with no trips before T are still listed (fully rested).
+    Object.keys(match).forEach(function (d) {
+      if (!by[d]) {
+        var rec = state.records.filter(function (r) { return r.driver === d; })[0];
+        by[d] = { aff: rec ? rec.affiliation : "", trips: [] };
+      }
+    });
+
+    var need = Math.round((rdState.minHours || 10) * 60);
+    var out = [];
+    Object.keys(by).forEach(function (name) {
+      var d = by[name];
+      var an = rdAnalyze(d.trips);
+      var av = rdAvailability(an.last, T);
+      var lastTrip = an.rows.length ? an.rows[an.rows.length - 1].tr.t : null;
+      var status = av.status;
+      if (status === "part" && av.avail >= need) status = av.avail >= 600 ? "full" : "part";
+      var ready = status !== "drv" && av.avail >= need;
+      if (!ready && status !== "drv") status = "no";
+      var lastViol = an.viols.length ? an.viols[an.viols.length - 1] : null;
+      out.push({
+        driver: name, aff: d.aff, plate: lastTrip ? lastTrip.plate : "-",
+        lastEnd: an.last ? an.last.end : null,
+        rest: an.last && T !== null ? T - an.last.end : null,
+        avail: av.avail, status: status, ready: ready,
+        readyAt: an.last && av.avail < 600 ? an.last.end + RD.LONG : null,
+        violTotal: an.viols.length, lastViol: lastViol, cycleViol: an.cycleViol, an: an,
+        stage: an.last ? an.last.stage : 0
+      });
+    });
+    var rank = { full: 0, part: 1, no: 2, drv: 3 };
+    out.sort(function (a, b) {
+      return (rank[a.status] - rank[b.status]) || (b.avail - a.avail) || a.driver.localeCompare(b.driver, "th");
+    });
+    return out;
+  }
+
+  function rdBadge(r) {
+    if (r.status === "full") return '<span class="rd-badge full">✅ พร้อมเต็ม</span>';
+    if (r.status === "part") return '<span class="rd-badge part">🟡 พร้อมบางส่วน</span>';
+    if (r.status === "drv") return '<span class="rd-badge drv">🚚 ยังไม่จบทริป</span>';
+    return '<span class="rd-badge no">⛔ ยังไม่พร้อม</span>';
+  }
+
+  function renderReady() {
+    var startInput = document.getElementById("rdStart");
+    if (!rdState.startStr) {
+      var maxEnd = null;
+      state.records.forEach(function (r) { var e = rdAbs(r.end) || rdAbs(r.start); if (e !== null && (maxEnd === null || e > maxEnd)) maxEnd = e; });
+      if (maxEnd === null) { document.getElementById("rdTable").innerHTML = '<div class="hbar-empty">ยังไม่มีข้อมูล</div>'; return; }
+      var nextDay = Math.floor(maxEnd / 1440) * 1440 + 1440 + 6 * 60;
+      rdState.startStr = rdAbsToInput(nextDay);
+      startInput.value = rdState.startStr;
+    }
+    var key = state.plates.join("|");
+    if (key !== rdPlateKey) { rdPlateKey = key; rdPlateMsel.setItems(state.plates.slice()); }
+    var selPlates = rdPlateMsel.getSelected();
+    var all = rdBuild().filter(function (r) { return !selPlates.length || selPlates.indexOf(r.plate) !== -1; });
+    rdState.rows = all;
+    var ready = all.filter(function (r) { return r.ready; }).length;
+    var viol = all.filter(function (r) { return r.violTotal > 0; }).length;
+    document.getElementById("rdStats").innerHTML =
+      '<span class="pill-stat">ผู้ขับขี่ <b>' + all.length + '</b></span>' +
+      '<span class="pill-stat">พร้อมรับงาน <b style="color:var(--primary)">' + ready + '</b></span>' +
+      '<span class="pill-stat">ยังไม่พร้อม <b style="color:var(--destructive)">' + (all.length - ready) + '</b></span>' +
+      '<span class="pill-stat">เคยผิดเงื่อนไข <b>' + viol + '</b></span>';
+
+    var show = all.filter(function (r) {
+      if (rdState.status === "ready") return r.ready;
+      if (rdState.status === "notready") return !r.ready;
+      if (rdState.status === "viol") return r.violTotal > 0;
+      return true;
+    });
+    var tbl = document.getElementById("rdTable");
+    if (!show.length) { tbl.innerHTML = '<div class="hbar-empty">ไม่พบผู้ขับขี่ตามเงื่อนไขที่เลือก</div>'; return; }
+
+    var h = '<table class="rd-table"><thead><tr><th>ผู้ขับขี่</th><th>สังกัด</th><th>ทะเบียนล่าสุด</th><th>จบทริปล่าสุด</th><th>พักมาแล้ว</th><th>ขับได้อีก</th><th>สถานะ</th><th>พร้อมเต็ม 10 ชม. เมื่อ</th></tr></thead><tbody>';
+    show.forEach(function (r) {
+      var restTxt = r.rest === null ? '<span class="rd-sub">ไม่มีประวัติ</span>' : (r.rest < 0 ? '<span class="rd-sub">—</span>' : rdDur(r.rest));
+      h += '<tr data-i="' + all.indexOf(r) + '">' +
+        '<td><b>' + escapeHtml(r.driver) + '</b></td>' +
+        '<td>' + escapeHtml(r.aff || "-") + '</td>' +
+        '<td>' + escapeHtml(r.plate || "-") + '</td>' +
+        '<td>' + (r.lastEnd === null ? "—" : rdFmt(r.lastEnd)) + '</td>' +
+        '<td>' + restTxt + '</td>' +
+        '<td>' + (r.status === "drv" ? "—" : fmtHours(r.avail / 60) + " ชม.") + '</td>' +
+        '<td>' + rdBadge(r) + '</td>' +
+        '<td>' + (r.readyAt === null ? (r.status === "drv" ? "หลังจบทริป +10 ชม." : "พร้อมแล้ว") : rdFmt(r.readyAt)) + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    tbl.innerHTML = h;
+  }
+
+  function openReadyDetail(r) {
+    var an = r.an;
+    var sum = an.rows.length
+      ? an.rows.length + " ทริป · ผิดเงื่อนไข " + r.violTotal + " ครั้ง · สถานะวันเริ่มงาน: " + (r.ready ? "พร้อมรับงาน" : "ยังไม่พร้อม")
+      : "ไม่มีประวัติทริปก่อนเวลาเริ่มงาน";
+    var h = "";
+    if (r.violTotal) {
+      h += '<div>' + an.viols.slice().reverse().slice(0, 30).map(function (v) {
+        return '<div class="rd-warn" style="margin-bottom:.3rem">⚠ ' + rdFmt(v.at) + ' — ' + escapeHtml(v.msg) + '</div>';
+      }).join("") + '</div>';
+    } else if (an.rows.length) {
+      h += '<div class="rd-ok">✅ ขับและพักผ่านเงื่อนไขทุกทริป</div>';
+    }
+    if (an.rows.length) {
+      h += '<div class="rd-sub">รอบใหม่ (พัก ≥10 ชม.) คั่นด้วยเส้นสีเขียว · เรียงจากทริปล่าสุด</div><div style="overflow-x:auto"><table class="rd-dtl"><thead><tr><th>รอบ</th><th>เริ่ม</th><th>สิ้นสุด</th><th>ขับ</th><th>พักก่อนหน้า</th><th>ช่วงที่</th><th>ขับสะสมช่วงนี้</th><th>ผลตรวจ</th></tr></thead><tbody>';
+      an.rows.slice().reverse().slice(0, 300).forEach(function (x) {
+        var res = x.flags.length ? '<span class="rd-warn">' + x.flags.map(escapeHtml).join("<br>") + '</span>' : '<span class="rd-ok">ผ่าน</span>';
+        if (x.notes.length) res += '<div class="rd-sub">' + x.notes.map(escapeHtml).join("<br>") + '</div>';
+        h += '<tr class="' + (x.flags.length ? "bad" : "") + (x.newCycle ? " cyc" : "") + '">' +
+          '<td>' + x.cycle + '</td><td>' + rdFmt(x.s) + '</td><td>' + rdFmt(x.e) + '</td><td>' + rdDur(x.dur) + '</td>' +
+          '<td>' + (x.gap === null ? "—" : rdDur(x.gap) + (x.gap >= RD.LONG ? " ✔10ชม." : "")) + '</td>' +
+          '<td>' + x.stage + '</td><td>' + rdDur(x.driven) + '</td><td>' + res + '</td></tr>';
+      });
+      h += '</tbody></table></div>';
+    }
+    showDetailModal("🚚 " + r.driver + (r.aff ? " · " + r.aff : ""), sum, h);
+  }
+
+  document.getElementById("rdTable").addEventListener("click", function (e) {
+    var tr = e.target.closest("tr[data-i]");
+    if (tr) openReadyDetail(rdState.rows[+tr.getAttribute("data-i")]);
+  });
+  document.getElementById("rdStart").addEventListener("change", function () { rdState.startStr = this.value; renderReady(); });
+  document.getElementById("rdMin").addEventListener("input", function () {
+    var v = parseFloat(this.value);
+    rdState.minHours = isNaN(v) ? 10 : Math.min(10, Math.max(0.5, v));
+    renderReady();
+  });
+  document.getElementById("rdStatus").addEventListener("change", function () { rdState.status = this.value; renderReady(); });
+  document.getElementById("rdNow").addEventListener("click", function () { rdState.startStr = ""; renderReady(); });
+
+})();
+</script>
+</body>
+</html>
